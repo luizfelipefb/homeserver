@@ -150,7 +150,7 @@ services:
       - DB_DATABASE=speedtest_tracker
       - DB_USERNAME=speedy
       - DB_PASSWORD=password
-      - APP_KEY=base64:CK57ocid1skobBx69rGSuzlrS78qfttPIDJjVES+108=
+      - APP_KEY=${SPEEDTEST_APIKEY}
       - SPEEDTEST_SCHEDULE=0 * * * *
     volumes:
       - ${CONFIG}/speedtest:/config

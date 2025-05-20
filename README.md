@@ -41,6 +41,9 @@ CHAT_ID=
 # cloudflare
 CLOUDFLARE_TUNNEL_TOKEN=
 CLOUDFLARE_API_KEY=
+
+# speedtracker
+SPEEDTEST_APIKEY=
 ```
 
 ## Applications
