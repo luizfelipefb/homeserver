@@ -1,0 +1,12 @@
+# Add this file to /etc/systemd/system/
+# Run `systemctl enable backup.service`
+
+[Unit]
+Description=Backup appdata to s3 using restic
+
+[Service]
+Type=simple
+ExecStart=/home/luizfelipefb/media-server/backup/backup.sh
+
+[Install]
+WantedBy=default.target

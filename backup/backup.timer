@@ -1,0 +1,14 @@
+# Add this file to /etc/systemd/system/
+# Run `systemctl enable backup.timer`
+# Run `systemctl start backup.timer`
+
+[Unit]
+Description=Schedule a backup daily
+
+[Timer]
+Persistent=true
+OnCalendar=*-*-* 05:55:00
+Unit=backup.service
+
+[Install]
+WantedBy=timers.target

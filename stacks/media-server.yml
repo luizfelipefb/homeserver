@@ -1,4 +1,27 @@
 services:
+  bazarr:
+    container_name: bazarr
+    image: linuxserver/bazarr:latest
+    restart: always
+    ports:
+      - 6767:6767
+    environment:
+      - TZ=${TIMEZONE}
+      - PUID=${UID}
+      - PGID=${GID}
+    volumes:
+      - ${CONFIG}/bazarr:/config
+      - ${MEDIA}/movies:/movies
+      - ${MEDIA}/tvshows:/tvshows
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.bazarr.loadbalancer.server.port=6767
+      - traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)
+      - traefik.http.routers.bazarr.entrypoints=websecure
+      - traefik.http.routers.bazarr.tls.certResolver=default
+      - traefik.http.routers.bazarr.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.bazarr.tls.domains[0].sans=*.${DOMAIN}
+      
   jellyfin:
     container_name: jellyfin
     image: linuxserver/jellyfin:latest
@@ -20,6 +43,28 @@ services:
       - traefik.http.routers.jellyfin.tls.certResolver=default
       - traefik.http.routers.jellyfin.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.jellyfin.tls.domains[0].sans=*.${DOMAIN}
+
+  overseerr:
+    image: sctx/overseerr:latest
+    container_name: overseerr
+    restart: always
+    ports:
+      - 5055:5055
+    environment:
+      - TZ=${TIMEZONE}
+      - PUID=${UID}
+      - PGID=${GID}
+      - LOG_LEVEL=debug
+    volumes:
+      - ${CONFIG}/overseerr:/app/config
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.overseerr.loadbalancer.server.port=5055
+      - traefik.http.routers.overseerr.rule=Host(`overseerr.${DOMAIN}`)
+      - traefik.http.routers.overseerr.entrypoints=websecure
+      - traefik.http.routers.overseerr.tls.certResolver=default
+      - traefik.http.routers.overseerr.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.overseerr.tls.domains[0].sans=*.${DOMAIN}
 
   plex:
     container_name: plex
@@ -45,28 +90,51 @@ services:
       - traefik.http.routers.plex.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.plex.tls.domains[0].sans=*.${DOMAIN}
 
-  bazarr:
-    container_name: bazarr
-    image: linuxserver/bazarr:latest
+  prowlarr:
+    container_name: prowlarr
+    image: lscr.io/linuxserver/prowlarr:latest
     restart: always
     ports:
-      - 6767:6767
+      - 9696:9696
     environment:
-      - TZ=${TIMEZONE}
       - PUID=${UID}
       - PGID=${GID}
+      - TZ=${TIMEZONE}
     volumes:
-      - ${CONFIG}/bazarr:/config
-      - ${MEDIA}/movies:/movies
-      - ${MEDIA}/tvshows:/tvshows
+      - ${CONFIG}/prowlarr:/config
     labels:
       - traefik.enable=true
-      - traefik.http.services.bazarr.loadbalancer.server.port=6767
-      - traefik.http.routers.bazarr.rule=Host(`bazarr.${DOMAIN}`)
-      - traefik.http.routers.bazarr.entrypoints=websecure
-      - traefik.http.routers.bazarr.tls.certResolver=default
-      - traefik.http.routers.bazarr.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.bazarr.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.services.prowlarr.loadbalancer.server.port=9696
+      - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)
+      - traefik.http.routers.prowlarr.entrypoints=websecure
+      - traefik.http.routers.prowlarr.tls.certResolver=default
+      - traefik.http.routers.prowlarr.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.prowlarr.tls.domains[0].sans=*.${DOMAIN}
+
+  qbittorrent:
+    container_name: qbittorrent
+    image: lscr.io/linuxserver/qbittorrent:latest
+    restart: always
+    environment:
+      - PUID=${UID}
+      - PGID=${GID}
+      - TZ=${TIMEZONE}
+      - WEBUI_PORT=8090
+    volumes:
+      - ${CONFIG}/qbittorrent:/config
+      - ${DOWNLOADS}:/downloads
+    ports:
+      - 8090:8090
+      - 59999:59999
+      - 59999:59999/udp
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.qbittorrent.loadbalancer.server.port=8090
+      - traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.${DOMAIN}`)
+      - traefik.http.routers.qbittorrent.entrypoints=websecure
+      - traefik.http.routers.qbittorrent.tls.certResolver=default
+      - traefik.http.routers.qbittorrent.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.qbittorrent.tls.domains[0].sans=*.${DOMAIN}
 
   radarr:
     container_name: radarr
@@ -121,71 +189,3 @@ services:
       - traefik.http.routers.sonarr.tls.certResolver=default
       - traefik.http.routers.sonarr.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.sonarr.tls.domains[0].sans=*.${DOMAIN}
-
-  overseerr:
-    image: sctx/overseerr:latest
-    container_name: overseerr
-    restart: always
-    ports:
-      - 5055:5055
-    environment:
-      - TZ=${TIMEZONE}
-      - PUID=${UID}
-      - PGID=${GID}
-      - LOG_LEVEL=debug
-    volumes:
-      - ${CONFIG}/overseerr:/app/config
-    labels:
-      - traefik.enable=true
-      - traefik.http.services.overseerr.loadbalancer.server.port=5055
-      - traefik.http.routers.overseerr.rule=Host(`overseerr.${DOMAIN}`)
-      - traefik.http.routers.overseerr.entrypoints=websecure
-      - traefik.http.routers.overseerr.tls.certResolver=default
-      - traefik.http.routers.overseerr.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.overseerr.tls.domains[0].sans=*.${DOMAIN}
-
-  prowlarr:
-    container_name: prowlarr
-    image: lscr.io/linuxserver/prowlarr:latest
-    restart: always
-    ports:
-      - 9696:9696
-    environment:
-      - PUID=${UID}
-      - PGID=${GID}
-      - TZ=${TIMEZONE}
-    volumes:
-      - ${CONFIG}/prowlarr:/config
-    labels:
-      - traefik.enable=true
-      - traefik.http.services.prowlarr.loadbalancer.server.port=9696
-      - traefik.http.routers.prowlarr.rule=Host(`prowlarr.${DOMAIN}`)
-      - traefik.http.routers.prowlarr.entrypoints=websecure
-      - traefik.http.routers.prowlarr.tls.certResolver=default
-      - traefik.http.routers.prowlarr.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.prowlarr.tls.domains[0].sans=*.${DOMAIN}
-
-  qbittorrent:
-    container_name: qbittorrent
-    image: lscr.io/linuxserver/qbittorrent:latest
-    restart: always
-    environment:
-      - PUID=${UID}
-      - PGID=${GID}
-      - TZ=${TIMEZONE}
-      - WEBUI_PORT=8090
-    volumes:
-      - ${CONFIG}/qbittorrent:/config
-      - ${DOWNLOADS}:/downloads
-    ports:
-      - 8090:8090
-      - 59999:59999
-      - 59999:59999/udp
-    labels:
-      - traefik.enable=true
-      - traefik.http.services.qbittorrent.loadbalancer.server.port=8090
-      - traefik.http.routers.qbittorrent.rule=Host(`qbittorrent.${DOMAIN}`)
-      - traefik.http.routers.qbittorrent.entrypoints=websecure
-      - traefik.http.routers.qbittorrent.tls.certResolver=default
-      - traefik.http.routers.qbittorrent.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.qbittorrent.tls.domains[0].sans=*.${DOMAIN}

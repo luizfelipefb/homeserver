@@ -1,4 +1,17 @@
 services:
+  cloudflare-ddns:
+    image: timothyjmiller/cloudflare-ddns:latest
+    container_name: cloudflare-ddns
+    restart: always
+    environment:
+      - PUID=${UID}
+      - PGID=${GID}
+      - TZ=${TIMEZONE}
+    volumes:
+      - ${CONFIG}/cloudflare-ddns/config.json:/config.json
+    labels:
+      - traefik.enable=false
+
   pihole:
     container_name: pihole
     image: pihole/pihole:latest
@@ -40,84 +53,6 @@ services:
       - traefik.http.routers.portainer.tls.certResolver=default
       - traefik.http.routers.portainer.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.portainer.tls.domains[0].sans=*.${DOMAIN}
-
-  traefik:
-    container_name: traefik
-    image: traefik:latest
-    restart: always
-    network_mode: host
-    environment:
-      - CLOUDFLARE_EMAIL=luizfelipefb@gmail.com
-      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
-    command:
-      - --providers.docker.exposedByDefault=false
-      - --entrypoints.web.address=:80
-      - --entrypoints.web.http.redirections.entryPoint.to=websecure
-      - --entrypoints.web.http.redirections.entryPoint.scheme=https
-      - --entrypoints.websecure.address=:443
-      - --entrypoints.websecure.http.tls=true
-      - --entrypoints.websecure.http.tls.certResolver=cloudflare
-      - --entrypoints.websecure.http.tls.domains[0].main=${DOMAIN}
-      - --entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN}
-      - --certificatesresolvers.default.acme.dnschallenge=true
-      - --certificatesresolvers.default.acme.dnschallenge.provider=cloudflare
-      - --certificatesresolvers.default.acme.storage=/ssl-certs/acme.json
-      - --log.filePath=/logs/log-file.log
-      - --log.level=DEBUG
-      - --api.insecure=true
-      - --api.dashboard=true
-    volumes:
-      - ${CONFIG}/traefik/certs:/ssl-certs
-      - ${CONFIG}/traefik/logs:/logs
-      - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      - traefik.enable=true
-      - traefik.http.services.traefik.loadbalancer.server.port=8080
-      - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)
-      - traefik.http.routers.traefik.entrypoints=websecure
-      - traefik.http.routers.traefik.tls.certResolver=default
-      - traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN}
-
-  # cloudflare-tunnel:
-  #   image: cloudflare/cloudflared:latest
-  #   container_name: cloudflare-tunnel
-  #   network_mode: host
-  #   restart: always
-  #   environment:
-  #     - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
-  #   command: tunnel run
-  #   labels:
-  #     - traefik.enable=false
-
-  cloudflare-ddns:
-    image: timothyjmiller/cloudflare-ddns:latest
-    container_name: cloudflare-ddns
-    restart: always
-    environment:
-      - PUID=${UID}
-      - PGID=${GID}
-      - TZ=${TIMEZONE}
-    volumes:
-      - ${CONFIG}/cloudflare-ddns/config.json:/config.json
-    labels:
-      - traefik.enable=false
-
-  watchtower:
-    container_name: watchtower
-    image: containrrr/watchtower:latest
-    restart: always
-    ports:
-      - 8084:8080
-    environment:
-      - TZ=${TIMEZONE}
-      - WATCHTOWER_HTTP_API_TOKEN=${WATCHTOWER_APIKEY}
-      - WATCHTOWER_HTTP_API_METRICS=true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: --cleanup --interval 3600
-    labels:
-      - traefik.enable=false
 
   postgres:
     container_name: postgres
@@ -165,3 +100,57 @@ services:
       - traefik.http.routers.speedtest.tls.certResolver=default
       - traefik.http.routers.speedtest.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.speedtest.tls.domains[0].sans=*.${DOMAIN}
+
+  traefik:
+    container_name: traefik
+    image: traefik:latest
+    restart: always
+    network_mode: host
+    environment:
+      - CLOUDFLARE_EMAIL=luizfelipefb@gmail.com
+      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
+    command:
+      - --providers.docker.exposedByDefault=false
+      - --entrypoints.web.address=:80
+      - --entrypoints.web.http.redirections.entryPoint.to=websecure
+      - --entrypoints.web.http.redirections.entryPoint.scheme=https
+      - --entrypoints.websecure.address=:443
+      - --entrypoints.websecure.http.tls=true
+      - --entrypoints.websecure.http.tls.certResolver=cloudflare
+      - --entrypoints.websecure.http.tls.domains[0].main=${DOMAIN}
+      - --entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN}
+      - --certificatesresolvers.default.acme.dnschallenge=true
+      - --certificatesresolvers.default.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.default.acme.storage=/ssl-certs/acme.json
+      - --log.filePath=/logs/log-file.log
+      - --log.level=DEBUG
+      - --api.insecure=true
+      - --api.dashboard=true
+    volumes:
+      - ${CONFIG}/traefik/certs:/ssl-certs
+      - ${CONFIG}/traefik/logs:/logs
+      - /var/run/docker.sock:/var/run/docker.sock
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.traefik.loadbalancer.server.port=8080
+      - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.traefik.entrypoints=websecure
+      - traefik.http.routers.traefik.tls.certResolver=default
+      - traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN}
+
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower:latest
+    restart: always
+    ports:
+      - 8084:8080
+    environment:
+      - TZ=${TIMEZONE}
+      - WATCHTOWER_HTTP_API_TOKEN=${WATCHTOWER_APIKEY}
+      - WATCHTOWER_HTTP_API_METRICS=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --cleanup --interval 3600
+    labels:
+      - traefik.enable=false
