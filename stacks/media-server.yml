@@ -21,7 +21,8 @@ services:
       - traefik.http.routers.bazarr.tls.certResolver=default
       - traefik.http.routers.bazarr.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.bazarr.tls.domains[0].sans=*.${DOMAIN}
-      
+      - traefik.http.routers.bazarr.middlewares=tinyauth
+
   jellyfin:
     container_name: jellyfin
     image: linuxserver/jellyfin:latest
@@ -110,6 +111,7 @@ services:
       - traefik.http.routers.prowlarr.tls.certResolver=default
       - traefik.http.routers.prowlarr.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.prowlarr.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.prowlarr.middlewares=tinyauth
 
   qbittorrent:
     container_name: qbittorrent
@@ -162,6 +164,7 @@ services:
       - traefik.http.routers.radarr.tls.certResolver=default
       - traefik.http.routers.radarr.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.radarr.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.radarr.middlewares=tinyauth
 
   sonarr:
     container_name: sonarr
@@ -189,3 +192,4 @@ services:
       - traefik.http.routers.sonarr.tls.certResolver=default
       - traefik.http.routers.sonarr.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.sonarr.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.sonarr.middlewares=tinyauth

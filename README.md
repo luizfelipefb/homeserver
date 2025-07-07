@@ -6,7 +6,7 @@ Run `make <target>` to create the desired containers or `make all` to deploy eve
 
 ## .env file
 
-Create an .env file with the following values <replacing where needed>:
+Create an .env file with the following values:
 
 ```shell
 # user and groups id
@@ -41,9 +41,14 @@ CHAT_ID=
 # cloudflare
 CLOUDFLARE_TUNNEL_TOKEN=
 CLOUDFLARE_API_KEY=
+CLOUDFLARE_EMAIL=
 
 # speedtracker
 SPEEDTEST_APIKEY=
+
+# tinyauth
+TINYAUTH_SECRET=
+TINYAUTH_USERS=
 ```
 
 ## Applications
@@ -104,6 +109,7 @@ SPEEDTEST_APIKEY=
 | portainer         | container management                                   | 9000/9443   |
 | postgres          | db used by speedtest-tracker                           | N/A         |
 | speedtest-tracker | wan speed test tracker                                 | 8083        |
+| tinyauth          | secure your apps with a login screen                   | 3003        |
 | traefik           | HTTP reverse proxy and load balancer                   | 80/443/8080 |
 | watchtower        | update the running version of your containerized apps  | 8084        |
 

@@ -4,7 +4,7 @@ services:
     image: ghcr.io/gethomepage/homepage:latest
     restart: always
     environment:
-      - HOMEPAGE_ALLOWED_HOSTS=10.69.4.20:3001,squats.luizfelipefb.com
+      - HOMEPAGE_ALLOWED_HOSTS=${HOST_IP}:3001,squats.${DOMAIN}
     ports:
       - 3001:3000
     volumes:

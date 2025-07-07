@@ -101,13 +101,33 @@ services:
       - traefik.http.routers.speedtest.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.speedtest.tls.domains[0].sans=*.${DOMAIN}
 
+  tinyauth:
+    container_name: tinyauth
+    image: ghcr.io/steveiliop56/tinyauth:v3
+    restart: always
+    network_mode: host
+    environment:
+      - APP_URL=https://tinyauth.${DOMAIN}
+      - USERS=${TINYAUTH_USERS}
+      - SECRET=${TINYAUTH_SECRET}
+      - PORT=3003
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.tinyauth.loadbalancer.server.port=3003
+      - traefik.http.routers.tinyauth.rule=Host(`tinyauth.${DOMAIN}`)
+      - traefik.http.routers.tinyauth.entrypoints=websecure
+      - traefik.http.routers.tinyauth.tls.certResolver=default
+      - traefik.http.routers.tinyauth.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.tinyauth.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.middlewares.tinyauth.forwardauth.address=http://${HOST_IP}:3003/api/auth/traefik
+
   traefik:
     container_name: traefik
     image: traefik:latest
     restart: always
     network_mode: host
     environment:
-      - CLOUDFLARE_EMAIL=luizfelipefb@gmail.com
+      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
       - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
     command:
       - --providers.docker.exposedByDefault=false
@@ -138,6 +158,7 @@ services:
       - traefik.http.routers.traefik.tls.certResolver=default
       - traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.traefik.middlewares=tinyauth
 
   watchtower:
     container_name: watchtower

@@ -36,3 +36,4 @@ services:
       - traefik.http.routers.nodered.tls.certResolver=default
       - traefik.http.routers.nodered.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.nodered.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.nodered.middlewares=tinyauth

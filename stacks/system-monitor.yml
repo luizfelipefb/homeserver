@@ -20,6 +20,7 @@ services:
       - traefik.http.routers.grafana.tls.certResolver=default
       - traefik.http.routers.grafana.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.grafana.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.grafana.middlewares=tinyauth
 
   influxdb1:
     container_name: influxdb1
@@ -96,6 +97,7 @@ services:
       - traefik.http.routers.scrutinyinfluxdb.tls.certResolver=default
       - traefik.http.routers.scrutinyinfluxdb.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.scrutinyinfluxdb.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.scrutiny.middlewares=tinyauth
 
   tautulli:
     container_name: tautulli
@@ -164,15 +166,15 @@ services:
       - VRKN_GLOBAL_SICKCHILL_SERVER_IDS=false
       - VRKN_GLOBAL_UNIFI_SERVER_IDS=false
       - VRKN_GLOBAL_MAXMIND_LICENSE_KEY=${MAXMIND_LICENSE_KEY}
-      - VRKN_INFLUXDB_URL=10.69.4.20
+      - VRKN_INFLUXDB_URL=${HOST_IP}
       - VRKN_INFLUXDB_PORT=8087
-      - VRKN_TAUTULLI_1_URL=10.69.4.20:8181
+      - VRKN_TAUTULLI_1_URL=${HOST_IP}:8181
       - VRKN_TAUTULLI_1_APIKEY=${TAUTULLI_APIKEY}
-      - VRKN_SONARR_1_URL=10.69.4.20:8989
+      - VRKN_SONARR_1_URL=${HOST_IP}:8989
       - VRKN_SONARR_1_APIKEY=${SONARR_APIKEY}
-      - VRKN_RADARR_1_URL=10.69.4.20:7878
+      - VRKN_RADARR_1_URL=${HOST_IP}:7878
       - VRKN_RADARR_1_APIKEY=${RADARR_APIKEY}
-      - VRKN_OMBI_1_URL=10.69.4.20:3579
+      - VRKN_OMBI_1_URL=${HOST_IP}:3579
       - VRKN_OMBI_1_APIKEY=${OMBI_APIKEY}
     volumes:
       - ${CONFIG}/varken:/config
