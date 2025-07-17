@@ -7,6 +7,10 @@ services:
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro
       - /dev/ttyACM0:/dev/ttyACM0
+    environment:
+      - PUID=${UID}
+      - PGID=${GID}
+      - TZ=${TIMEZONE}
     restart: always
     privileged: true
     network_mode: host

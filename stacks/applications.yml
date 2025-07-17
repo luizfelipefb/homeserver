@@ -4,7 +4,8 @@ services:
     image: ghcr.io/gethomepage/homepage:latest
     restart: always
     environment:
-      - HOMEPAGE_ALLOWED_HOSTS=${HOST_IP}:3001,squats.${DOMAIN}
+      - HOMEPAGE_ALLOWED_HOSTS=${HOST_IP}:3001,squats.${DOMAIN},homepage.${DOMAIN}
+      - TZ=${TIMEZONE}
     ports:
       - 3001:3000
     volumes:
@@ -14,28 +15,31 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.services.homepage.loadbalancer.server.port=3000
-      - traefik.http.routers.homepage.rule=Host(`squats.${DOMAIN}`)
+      - traefik.http.routers.homepage.rule=Host(`homepage.${DOMAIN}`)
       - traefik.http.routers.homepage.entrypoints=websecure
       - traefik.http.routers.homepage.tls.certResolver=default
       - traefik.http.routers.homepage.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.homepage.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.homepage.middlewares=tinyauth
 
-  shiori:
-    container_name: shiori
-    image: ghcr.io/go-shiori/shiori:latest
-    platform: linux/amd64
+  linkding:
+    container_name: linkding
+    image: ghcr.io/sissbruecker/linkding:latest-plus
     restart: always
     environment:
+      - PUID=${UID}
+      - PGID=${GID}
       - TZ=${TIMEZONE}
     ports:
-      - 3002:8080
+      - 9090:9090
     volumes:
-      - ${CONFIG}/shiori:/shiori
+      - ${CONFIG}/linkding:/etc/linkding/data
     labels:
       - traefik.enable=true
-      - traefik.http.services.shiori.loadbalancer.server.port=8080 # using internal container port
-      - traefik.http.routers.shiori.rule=Host(`shiori.${DOMAIN}`)
-      - traefik.http.routers.shiori.entrypoints=websecure
-      - traefik.http.routers.shiori.tls.certResolver=default
-      - traefik.http.routers.shiori.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.shiori.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.services.linkding.loadbalancer.server.port=9090
+      - traefik.http.routers.linkding.rule=Host(`linkding.${DOMAIN}`)
+      - traefik.http.routers.linkding.entrypoints=websecure
+      - traefik.http.routers.linkding.tls.certResolver=default
+      - traefik.http.routers.linkding.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.linkding.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.linkding.middlewares=tinyauth

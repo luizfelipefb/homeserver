@@ -22,43 +22,25 @@ services:
       - traefik.http.routers.grafana.tls.domains[0].sans=*.${DOMAIN}
       - traefik.http.routers.grafana.middlewares=tinyauth
 
-  influxdb1:
-    container_name: influxdb1
-    image: influxdb:1.8
-    restart: always
-    ports:
-      - 8087:8086
-    volumes:
-      - ${CONFIG}/influxdb1:/var/lib/influxdb
-#    healthcheck:
-#      test: "curl -f http://localhost:8086/ping"
-#      interval: 3s
-#      timeout: 10s
-#      retries: 10
-    labels:
-      - traefik.enable=false
-
-  influxdb2:
-    container_name: influxdb2
+  influxdb:
+    container_name: influxdb
     image: influxdb:latest
     restart: always
-    ports:
-      - 8088:8086
     volumes:
-      - ${CONFIG}/influxdb2:/var/lib/influxdb2
-#    healthcheck:
-#      test: "curl -f http://localhost:8086/health"
-#      interval: 3s
-#      timeout: 10s
-#      retries: 10
+      - ${CONFIG}/influxdb:/var/lib/influxdb
+    healthcheck:
+      test: "curl -f http://localhost:8086/health"
+      interval: 3s
+      timeout: 10s
+      retries: 10
     labels:
       - traefik.enable=true
-      - traefik.http.services.influxdb2.loadbalancer.server.port=8086
-      - traefik.http.routers.influxdb2.rule=Host(`influxdb2.${DOMAIN}`)
-      - traefik.http.routers.influxdb2.entrypoints=websecure
-      - traefik.http.routers.influxdb2.tls.certResolver=default
-      - traefik.http.routers.influxdb2.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.influxdb2.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.services.influxdb.loadbalancer.server.port=8086
+      - traefik.http.routers.influxdb.rule=Host(`influxdb.${DOMAIN}`)
+      - traefik.http.routers.influxdb.entrypoints=websecure
+      - traefik.http.routers.influxdb.tls.certResolver=default
+      - traefik.http.routers.influxdb.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.influxdb.tls.domains[0].sans=*.${DOMAIN}
 
   scrutiny:
     container_name: scrutiny
@@ -66,7 +48,6 @@ services:
     restart: always
     ports:
       - 8085:8080
-      - 8089:8086
     environment:
       - TZ=${TIMEZONE}
       - PUID=${UID}
@@ -75,8 +56,7 @@ services:
       - SYS_RAWIO
       - SYS_ADMIN
     volumes:
-      - ${CONFIG}/scrutiny-config:/opt/scrutiny/config
-      - ${CONFIG}/scrutiny-influxdb:/opt/scrutiny/influxdb
+      - ${CONFIG}/scrutiny:/opt/scrutiny/config
       - /run/udev:/run/udev:ro
     devices:
       - /dev/sda
@@ -90,13 +70,6 @@ services:
       - traefik.http.routers.scrutiny.tls.certResolver=default
       - traefik.http.routers.scrutiny.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.scrutiny.tls.domains[0].sans=*.${DOMAIN}
-      - traefik.http.services.scrutinyinfluxdb.loadbalancer.server.port=8086
-      - traefik.http.routers.scrutinyinfluxdb.service=scrutinyinfluxdb
-      - traefik.http.routers.scrutinyinfluxdb.rule=Host(`scrutinyinfluxdb.${DOMAIN}`)
-      - traefik.http.routers.scrutinyinfluxdb.entrypoints=websecure
-      - traefik.http.routers.scrutinyinfluxdb.tls.certResolver=default
-      - traefik.http.routers.scrutinyinfluxdb.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.scrutinyinfluxdb.tls.domains[0].sans=*.${DOMAIN}
       - traefik.http.routers.scrutiny.middlewares=tinyauth
 
   tautulli:
@@ -126,9 +99,9 @@ services:
     image: telegraf:latest
     restart: always
     user: telegraf:${DOCKER_GID}
-#    depends_on:
-#      influxdb2:
-#        condition: service_healthy
+    depends_on:
+      influxdb:
+        condition: service_healthy
     environment:
       - HOST_MOUNT_PREFIX=/hostfs
       - HOST_ETC=/hostfs/etc
@@ -136,47 +109,11 @@ services:
       - HOST_SYS=/hostfs/sys
       - HOST_VAR=/hostfs/var
       - HOST_RUN=/hostfs/run
-      - INFLUXDB2_TOKEN=${INFLUXDB2_TOKEN}
+      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
     volumes:
       - /proc:/hostfs/proc:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/disk1:/hostfs/mnt/disk1
       - ../config/telegraf.conf:/etc/telegraf/telegraf.conf:ro
-    labels:
-      - traefik.enable=false
-
-  varken:
-    container_name: varken
-    image: boerderij/varken:latest
-    restart: always
-    depends_on:
-      tautulli:
-        condition: service_started
-#      influxdb1:
-#        condition: service_healthy
-    environment:
-      - TZ=${TIMEZONE}
-      - PUID=${UID}
-      - PGID=${GID}
-      - VRKN_GLOBAL_SONARR_SERVER_IDS=1
-      - VRKN_GLOBAL_RADARR_SERVER_IDS=1
-      - VRKN_GLOBAL_LIDARR_SERVER_IDS=false
-      - VRKN_GLOBAL_TAUTULLI_SERVER_IDS=1
-      - VRKN_GLOBAL_OMBI_SERVER_IDS=1
-      - VRKN_GLOBAL_SICKCHILL_SERVER_IDS=false
-      - VRKN_GLOBAL_UNIFI_SERVER_IDS=false
-      - VRKN_GLOBAL_MAXMIND_LICENSE_KEY=${MAXMIND_LICENSE_KEY}
-      - VRKN_INFLUXDB_URL=${HOST_IP}
-      - VRKN_INFLUXDB_PORT=8087
-      - VRKN_TAUTULLI_1_URL=${HOST_IP}:8181
-      - VRKN_TAUTULLI_1_APIKEY=${TAUTULLI_APIKEY}
-      - VRKN_SONARR_1_URL=${HOST_IP}:8989
-      - VRKN_SONARR_1_APIKEY=${SONARR_APIKEY}
-      - VRKN_RADARR_1_URL=${HOST_IP}:7878
-      - VRKN_RADARR_1_APIKEY=${RADARR_APIKEY}
-      - VRKN_OMBI_1_URL=${HOST_IP}:3579
-      - VRKN_OMBI_1_APIKEY=${OMBI_APIKEY}
-    volumes:
-      - ${CONFIG}/varken:/config
     labels:
       - traefik.enable=false

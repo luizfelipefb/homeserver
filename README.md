@@ -58,7 +58,7 @@ TINYAUTH_USERS=
 | service  | description           | port |
 | -------- | --------------------- | ---- |
 | homepage | application dashboard | 3001 |
-| shiori   | bookmarks manager     | 3002 |
+| linkding | bookmarks manager     | 9090 |
 
 ## Home Automation
 
@@ -88,15 +88,14 @@ TINYAUTH_USERS=
 
 `make system-monitor`
 
-| service   | description                                     | port      |
-| --------- | ----------------------------------------------- | --------- |
-| grafana   | analytics & monitoring web interface            | 3000      |
-| influxdb1 | time series database                            | 8087      |
-| influxdb2 | time series database v2                         | 8088      |
-| scrutiny  | s.m.a.r.t. monitoring and self influx db        | 8085/8086 |
-| tautulli  | monitor and analytics for plex                  | 8181      |
-| telegraf  | server agent for collecting & reporting metrics | N/A       |
-| varken    | plex aggregator to influxdb                     | N/A       |
+| service  | description                                     | port |
+| -------- | ----------------------------------------------- | ---- |
+| grafana  | analytics & monitoring web interface            | 3000 |
+| influxdb | time series database                            | 8086 |
+| scrutiny | s.m.a.r.t. monitoring and self influx db        | 8085 |
+| tautulli | monitor and analytics for plex                  | 8181 |
+| telegraf | server agent for collecting & reporting metrics | N/A  |
+| varken   | plex aggregator to influxdb                     | N/A  |
 
 ## System Utils
 
