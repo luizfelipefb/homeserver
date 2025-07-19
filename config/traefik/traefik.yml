@@ -19,7 +19,7 @@ serversTransport:
 certificatesResolvers:
   cloudflare:
     acme:
-      email: replace@example.com
+      email: {{env "CLOUDFLARE_EMAIL"}}
       storage: /ssl-certs/acme.json
       dnsChallenge:
         provider: cloudflare
