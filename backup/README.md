@@ -20,8 +20,15 @@ systemctl start backup.timer
 
 ## Configuration
 
-To change the recurrency of the backup, update the `OnCalendar` field in `backup.timer`
-To change what and where to backup, update `backup.sh` script
+- To change the recurrency of the backup, update the `OnCalendar` field in `backup.timer`
+- To change what and where to backup, update `backup.sh` script
+- Create a `.env` file in the same folder as `backup.sh` script with the following values:
+
+```sh
+AWS_ACCESS_KEY_ID=""
+AWS_SECRET_ACCESS_KEY=""
+RESTIC_PASSWORD=""
+```
 
 ## Useful commands
 
