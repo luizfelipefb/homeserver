@@ -23,6 +23,7 @@ DOWNLOADS=
 
 # domain name for forwarding
 DOMAIN=
+HOST_IP=
 
 # apikeys
 PLEX_CLAIM=
@@ -32,7 +33,7 @@ SONARR_APIKEY=
 RADARR_APIKEY=
 OMBI_APIKEY=
 WATCHTOWER_APIKEY=
-INFLUXDB2_TOKEN=
+INFLUXDB_TOKEN=
 
 # telegram bot messeger (optional)
 TELEGRAM_BOT_TOKEN=
