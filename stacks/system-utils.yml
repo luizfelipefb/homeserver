@@ -111,6 +111,7 @@ services:
       - USERS=${TINYAUTH_USERS}
       - SECRET=${TINYAUTH_SECRET}
       - PORT=3003
+      - DISABLE_CONTINUE=true
     labels:
       - traefik.enable=true
       - traefik.http.services.tinyauth.loadbalancer.server.port=3003

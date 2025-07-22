@@ -6,6 +6,8 @@ services:
     environment:
       - HOMEPAGE_ALLOWED_HOSTS=${HOST_IP}:3001,squats.${DOMAIN},homepage.${DOMAIN}
       - TZ=${TIMEZONE}
+      - PUID=${UID}
+      - PGID=${GID}
     ports:
       - 3001:3000
     volumes:
