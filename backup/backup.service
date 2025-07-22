@@ -6,7 +6,7 @@ Description=Backup appdata to s3 using restic
 
 [Service]
 Type=simple
-ExecStart=/home/luizfelipefb/media-server/backup/backup.sh
+ExecStart=/home/luizfelipefb/homeserver/backup/backup.sh
 
 [Install]
 WantedBy=default.target
