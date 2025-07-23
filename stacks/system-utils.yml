@@ -4,11 +4,24 @@ services:
     container_name: cloudflare-ddns
     restart: always
     environment:
-      - PUID=${UID}
-      - PGID=${GID}
-      - TZ=${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
+      TZ: ${TIMEZONE}
     volumes:
       - ${CONFIG}/cloudflare-ddns/config.json:/config.json
+    labels:
+      - traefik.enable=false
+
+  cloudflare-tunnel:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflare-tunnel
+    restart: always
+    network_mode: host
+    environment:
+      CLOUDFLARE_TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
+    volumes:
+      - ${CONFIG}/cloudflare-tunnel:/etc/cloudflared
+    command: tunnel --loglevel debug run --token ${CLOUDFLARE_TUNNEL_TOKEN}
     labels:
       - traefik.enable=false
 
@@ -18,9 +31,9 @@ services:
     restart: always
     network_mode: host
     environment:
-      - TZ=${TIMEZONE}
-      - FTLCONF_dns_interface=enp2s0
-      - FTLCONF_webserver_port=8053
+      TZ: ${TIMEZONE}
+      FTLCONF_dns_interface: enp2s0
+      FTLCONF_webserver_port: 8053
     volumes:
       - ${CONFIG}/pihole/etc-pihole:/etc/pihole
       - ${CONFIG}/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
@@ -59,12 +72,12 @@ services:
     image: postgres:15
     restart: always
     environment:
-      - TZ=${TIMEZONE}
-      - PUID=${UID}
-      - PGID=${GID}
-      - POSTGRES_DB=speedtest_tracker
-      - POSTGRES_USER=speedy
-      - POSTGRES_PASSWORD=password
+      TZ: ${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
+      POSTGRES_DB: speedtest_tracker
+      POSTGRES_USER: speedy
+      POSTGRES_PASSWORD: password
     volumes:
       - ${CONFIG}/postgres:/var/lib/postgresql/data
     labels:
@@ -76,17 +89,17 @@ services:
     ports:
       - 8083:80
     environment:
-      - DISPLAY_TIMEZONE=${TIMEZONE}
-      - PUID=${UID}
-      - PGID=${GID}
-      - DB_CONNECTION=pgsql
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_DATABASE=speedtest_tracker
-      - DB_USERNAME=speedy
-      - DB_PASSWORD=password
-      - APP_KEY=${SPEEDTEST_APIKEY}
-      - SPEEDTEST_SCHEDULE=0 * * * *
+      DISPLAY_TIMEZONE: ${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: speedtest_tracker
+      DB_USERNAME: speedy
+      DB_PASSWORD: password
+      APP_KEY: ${SPEEDTEST_APIKEY}
+      SPEEDTEST_SCHEDULE: 0 * * * *
     volumes:
       - ${CONFIG}/speedtest:/config
     restart: unless-stopped
@@ -107,11 +120,11 @@ services:
     restart: always
     network_mode: host
     environment:
-      - APP_URL=https://tinyauth.${DOMAIN}
-      - USERS=${TINYAUTH_USERS}
-      - SECRET=${TINYAUTH_SECRET}
-      - PORT=3003
-      - DISABLE_CONTINUE=true
+      APP_URL: https://tinyauth.${DOMAIN}
+      USERS: ${TINYAUTH_USERS}
+      SECRET: ${TINYAUTH_SECRET}
+      PORT: 3003
+      DISABLE_CONTINUE: true
     labels:
       - traefik.enable=true
       - traefik.http.services.tinyauth.loadbalancer.server.port=3003
@@ -128,8 +141,10 @@ services:
     restart: always
     network_mode: host
     environment:
-      - CLOUDFLARE_EMAIL=${CLOUDFLARE_EMAIL}
-      - CLOUDFLARE_API_KEY=${CLOUDFLARE_API_KEY}
+      CLOUDFLARE_EMAIL: ${CLOUDFLARE_EMAIL}
+      CLOUDFLARE_API_KEY: ${CLOUDFLARE_API_KEY}
+      CF_API_EMAIL: ${CLOUDFLARE_EMAIL}
+      CF_API_KEY: ${CLOUDFLARE_API_KEY}
     command:
       - --providers.docker.exposedByDefault=false
       - --entrypoints.web.address=:80
@@ -137,13 +152,13 @@ services:
       - --entrypoints.web.http.redirections.entryPoint.scheme=https
       - --entrypoints.websecure.address=:443
       - --entrypoints.websecure.http.tls=true
-      - --entrypoints.websecure.http.tls.certResolver=cloudflare
+      - --entrypoints.websecure.http.tls.certResolver=default
       - --entrypoints.websecure.http.tls.domains[0].main=${DOMAIN}
       - --entrypoints.websecure.http.tls.domains[0].sans=*.${DOMAIN}
       - --certificatesresolvers.default.acme.dnschallenge=true
       - --certificatesresolvers.default.acme.dnschallenge.provider=cloudflare
+      - --certificatesresolvers.default.acme.email=${CLOUDFLARE_EMAIL}
       - --certificatesresolvers.default.acme.storage=/ssl-certs/acme.json
-      - --log.filePath=/logs/log-file.log
       - --log.level=DEBUG
       - --api.insecure=true
       - --api.dashboard=true
@@ -168,9 +183,9 @@ services:
     ports:
       - 8084:8080
     environment:
-      - TZ=${TIMEZONE}
-      - WATCHTOWER_HTTP_API_TOKEN=${WATCHTOWER_APIKEY}
-      - WATCHTOWER_HTTP_API_METRICS=true
+      TZ: ${TIMEZONE}
+      WATCHTOWER_HTTP_API_TOKEN: ${WATCHTOWER_APIKEY}
+      WATCHTOWER_HTTP_API_METRICS: true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --cleanup --interval 3600

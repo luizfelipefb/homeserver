@@ -6,9 +6,9 @@ services:
     ports:
       - 6767:6767
     environment:
-      - TZ=${TIMEZONE}
-      - PUID=${UID}
-      - PGID=${GID}
+      TZ: ${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
     volumes:
       - ${CONFIG}/bazarr:/config
       - ${MEDIA}/movies:/movies
@@ -30,9 +30,9 @@ services:
     ports:
       - 8096:8096
     environment:
-      - TZ=${TIMEZONE}
-      - PUID=${UID}
-      - PGID=${GID}
+      TZ: ${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
     volumes:
       - ${CONFIG}/jellyfin:/config
       - ${MEDIA}:/data
@@ -52,10 +52,10 @@ services:
     ports:
       - 5055:5055
     environment:
-      - TZ=${TIMEZONE}
-      - PUID=${UID}
-      - PGID=${GID}
-      - LOG_LEVEL=debug
+      TZ: ${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
+      LOG_LEVEL: debug
     volumes:
       - ${CONFIG}/overseerr:/app/config
     labels:
@@ -74,10 +74,10 @@ services:
     ports:
       - 32400:32400
     environment:
-      - TZ=${TIMEZONE}
-      - PLEX_CLAIM=${PLEX_CLAIM}
-      - PLEX_UID=${UID}
-      - PLEX_GID=${GID}
+      TZ: ${TIMEZONE}
+      PLEX_CLAIM: ${PLEX_CLAIM}
+      PLEX_UID: ${UID}
+      PLEX_GID: ${GID}
     volumes:
       - ${CONFIG}/plex:/config
       - ${TRANSCODE}:/transcode
@@ -98,9 +98,9 @@ services:
     ports:
       - 9696:9696
     environment:
-      - PUID=${UID}
-      - PGID=${GID}
-      - TZ=${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
+      TZ: ${TIMEZONE}
     volumes:
       - ${CONFIG}/prowlarr:/config
     labels:
@@ -118,10 +118,10 @@ services:
     image: lscr.io/linuxserver/qbittorrent:latest
     restart: always
     environment:
-      - PUID=${UID}
-      - PGID=${GID}
-      - TZ=${TIMEZONE}
-      - WEBUI_PORT=8090
+      PUID: ${UID}
+      PGID: ${GID}
+      TZ: ${TIMEZONE}
+      WEBUI_PORT: 8090
     volumes:
       - ${CONFIG}/qbittorrent:/config
       - ${DOWNLOADS}:/downloads
@@ -147,9 +147,9 @@ services:
     depends_on:
       - qbittorrent
     environment:
-      - TZ=${TIMEZONE}
-      - PUID=${UID}
-      - PGID=${GID}
+      TZ: ${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
     volumes:
       - ${CONFIG}/radarr:/config
       - ${MEDIA}/movies:/movies
@@ -175,9 +175,9 @@ services:
     depends_on:
       - qbittorrent
     environment:
-      - TZ=${TIMEZONE}
-      - PUID=${UID}
-      - PGID=${GID}
+      TZ: ${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
     volumes:
       - ${CONFIG}/sonarr:/config
       - ${MEDIA}/tvshows:/tvshows

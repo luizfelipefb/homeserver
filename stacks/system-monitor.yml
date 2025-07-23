@@ -1,4 +1,35 @@
 services:
+  beszel:
+    image: henrygd/beszel:latest
+    container_name: beszel
+    restart: always
+    environment:
+      TZ: ${TIMEZONE}
+    ports:
+      - 8091:8090
+    volumes:
+      - ${CONFIG}/beszel:/beszel_data
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.beszel.loadbalancer.server.port=8090
+      - traefik.http.routers.beszel.rule=Host(`beszel.${DOMAIN}`)
+      - traefik.http.routers.beszel.entrypoints=websecure
+      - traefik.http.routers.beszel.tls.certResolver=default
+      - traefik.http.routers.beszel.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.beszel.tls.domains[0].sans=*.${DOMAIN}
+
+  beszel-agent:
+    image: henrygd/beszel-agent:latest
+    container_name: beszel-agent
+    restart: always
+    network_mode: host
+    environment:
+      TZ: ${TIMEZONE}
+      LISTEN: 45876
+      KEY: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFFOeIAdRpwoIoV93MjH47hWSnDoricrj7DU7ROqfbpv'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
@@ -7,9 +38,9 @@ services:
     ports:
       - 3000:3000
     environment:
-      - GF_AUTH_ANONYMOUS_ENABLED=true
-      - GF_AUTH_ANONYMOUS_ORG_NAME=Organization
-      - GF_INSTALL_PLUGINS=grafana-piechart-panel,grafana-worldmap-panel
+      GF_AUTH_ANONYMOUS_ENABLED: true
+      GF_AUTH_ANONYMOUS_ORG_NAME: Organization
+      GF_INSTALL_PLUGINS: grafana-piechart-panel,grafana-worldmap-panel
     volumes:
       - ${CONFIG}/grafana/data:/var/lib/grafana
     labels:
@@ -29,7 +60,7 @@ services:
     volumes:
       - ${CONFIG}/influxdb:/var/lib/influxdb
     healthcheck:
-      test: "curl -f http://localhost:8086/health"
+      test: 'curl -f http://localhost:8086/health'
       interval: 3s
       timeout: 10s
       retries: 10
@@ -49,9 +80,9 @@ services:
     ports:
       - 8085:8080
     environment:
-      - TZ=${TIMEZONE}
-      - PUID=${UID}
-      - PGID=${GID}
+      TZ: ${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
     cap_add:
       - SYS_RAWIO
       - SYS_ADMIN
@@ -79,9 +110,9 @@ services:
     ports:
       - 8181:8181
     environment:
-      - TZ=${TIMEZONE}
-      - PUID=${UID}
-      - PGID=${GID}
+      TZ: ${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
     volumes:
       - ${CONFIG}/tautulli:/config
       - ${CONFIG}/plex/Library/Application Support/Plex Media Server/Logs:/logs
@@ -103,13 +134,13 @@ services:
       influxdb:
         condition: service_healthy
     environment:
-      - HOST_MOUNT_PREFIX=/hostfs
-      - HOST_ETC=/hostfs/etc
-      - HOST_PROC=/hostfs/proc
-      - HOST_SYS=/hostfs/sys
-      - HOST_VAR=/hostfs/var
-      - HOST_RUN=/hostfs/run
-      - INFLUXDB_TOKEN=${INFLUXDB_TOKEN}
+      HOST_MOUNT_PREFIX: /hostfs
+      HOST_ETC: /hostfs/etc
+      HOST_PROC: /hostfs/proc
+      HOST_SYS: /hostfs/sys
+      HOST_VAR: /hostfs/var
+      HOST_RUN: /hostfs/run
+      INFLUXDB_TOKEN: ${INFLUXDB_TOKEN}
     volumes:
       - /proc:/hostfs/proc:ro
       - /var/run/docker.sock:/var/run/docker.sock

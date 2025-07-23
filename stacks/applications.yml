@@ -4,10 +4,10 @@ services:
     image: ghcr.io/gethomepage/homepage:latest
     restart: always
     environment:
-      - HOMEPAGE_ALLOWED_HOSTS=${HOST_IP}:3001,squats.${DOMAIN},homepage.${DOMAIN}
-      - TZ=${TIMEZONE}
-      - PUID=${UID}
-      - PGID=${DOCKER_GID}
+      HOMEPAGE_ALLOWED_HOSTS: ${HOST_IP}:3001,squats.${DOMAIN},homepage.${DOMAIN}
+      TZ: ${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${DOCKER_GID}
     ports:
       - 3001:3000
     volumes:
@@ -29,9 +29,9 @@ services:
     image: ghcr.io/sissbruecker/linkding:latest-plus
     restart: always
     environment:
-      - PUID=${UID}
-      - PGID=${GID}
-      - TZ=${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
+      TZ: ${TIMEZONE}
     ports:
       - 9090:9090
     volumes:

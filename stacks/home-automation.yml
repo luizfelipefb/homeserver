@@ -8,9 +8,9 @@ services:
       - /run/dbus:/run/dbus:ro
       - /dev/ttyACM0:/dev/ttyACM0
     environment:
-      - PUID=${UID}
-      - PGID=${GID}
-      - TZ=${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
+      TZ: ${TIMEZONE}
     restart: always
     privileged: true
     network_mode: host
@@ -29,7 +29,7 @@ services:
     network_mode: host
     restart: always
     environment:
-      - TZ=${TIMEZONE}
+      TZ: ${TIMEZONE}
     volumes:
       - ${CONFIG}/nodered:/data
     labels:
