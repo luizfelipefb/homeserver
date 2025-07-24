@@ -22,13 +22,16 @@ services:
     image: henrygd/beszel-agent:latest
     container_name: beszel-agent
     restart: always
-    network_mode: host
+    ports:
+      - 45876:45876
     environment:
       TZ: ${TIMEZONE}
       LISTEN: 45876
-      KEY: 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFFOeIAdRpwoIoV93MjH47hWSnDoricrj7DU7ROqfbpv'
+      KEY: ${BESZEL_KEY}
     volumes:
+      - ${CONFIG}/beszel-agent:/beszel_data
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /mnt/disk1/.beszel:/extra-filesystems/sdb:ro
 
   grafana:
     container_name: grafana
@@ -148,5 +151,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/disk1:/hostfs/mnt/disk1
       - ../config/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - ${CONFIG}/telegraf:/etc/telegraf
     labels:
       - traefik.enable=false

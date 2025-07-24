@@ -50,6 +50,9 @@ SPEEDTEST_APIKEY=
 # tinyauth
 TINYAUTH_SECRET=
 TINYAUTH_USERS=
+
+#beszel
+BESZEL_KEY=
 ```
 
 ## Applications
@@ -89,14 +92,16 @@ TINYAUTH_USERS=
 
 `make system-monitor`
 
-| service  | description                                     | port |
-| -------- | ----------------------------------------------- | ---- |
-| grafana  | analytics & monitoring web interface            | 3000 |
-| influxdb | time series database                            | 8086 |
-| scrutiny | s.m.a.r.t. monitoring and self influx db        | 8085 |
-| tautulli | monitor and analytics for plex                  | 8181 |
-| telegraf | server agent for collecting & reporting metrics | N/A  |
-| varken   | plex aggregator to influxdb                     | N/A  |
+| service      | description                                     | port  |
+| ------------ | ----------------------------------------------- | ----- |
+| beszel       | lightweight server monitoring                   | 8091  |
+| beszel-agent | beszel agent                                    | 45876 |
+| grafana      | analytics & monitoring web interface            | 3000  |
+| influxdb     | time series database                            | 8086  |
+| scrutiny     | s.m.a.r.t. monitoring and self influx db        | 8085  |
+| tautulli     | monitor and analytics for plex                  | 8181  |
+| telegraf     | server agent for collecting & reporting metrics | N/A   |
+| varken       | plex aggregator to influxdb                     | N/A   |
 
 ## System Utils
 
