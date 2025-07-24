@@ -1,6 +1,6 @@
 services:
   beszel:
-    image: henrygd/beszel:latest
+    image: ghcr.io/henrygd/beszel/beszel:latest
     container_name: beszel
     restart: always
     environment:
@@ -19,7 +19,7 @@ services:
       - traefik.http.routers.beszel.tls.domains[0].sans=*.${DOMAIN}
 
   beszel-agent:
-    image: henrygd/beszel-agent:latest
+    image: ghcr.io/henrygd/beszel/beszel-agent:latest
     container_name: beszel-agent
     restart: always
     ports:
@@ -110,7 +110,7 @@ services:
 
   tautulli:
     container_name: tautulli
-    image: linuxserver/tautulli:latest
+    image: ghcr.io/linuxserver/tautulli:latest
     restart: always
     ports:
       - 8181:8181

@@ -85,7 +85,7 @@ services:
 
   speedtest-tracker:
     container_name: speedtest-tracker
-    image: lscr.io/linuxserver/speedtest-tracker:latest
+    image: ghcr.io/linuxserver/speedtest-tracker:latest
     ports:
       - 8083:80
     environment:
@@ -116,7 +116,7 @@ services:
 
   tinyauth:
     container_name: tinyauth
-    image: ghcr.io/steveiliop56/tinyauth:v3
+    image: ghcr.io/steveiliop56/tinyauth:latest
     restart: always
     network_mode: host
     environment:

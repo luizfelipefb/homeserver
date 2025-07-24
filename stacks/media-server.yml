@@ -1,7 +1,7 @@
 services:
   bazarr:
     container_name: bazarr
-    image: linuxserver/bazarr:latest
+    image: ghcr.io/linuxserver/bazarr:latest
     restart: always
     ports:
       - 6767:6767
@@ -25,7 +25,7 @@ services:
 
   jellyfin:
     container_name: jellyfin
-    image: linuxserver/jellyfin:latest
+    image: ghcr.io/linuxserver/jellyfin:latest
     restart: always
     ports:
       - 8096:8096
@@ -46,7 +46,7 @@ services:
       - traefik.http.routers.jellyfin.tls.domains[0].sans=*.${DOMAIN}
 
   overseerr:
-    image: sctx/overseerr:latest
+    image: ghcr.io/linuxserver/overseerr:latest
     container_name: overseerr
     restart: always
     ports:
@@ -69,7 +69,7 @@ services:
 
   plex:
     container_name: plex
-    image: plexinc/pms-docker:latest
+    image: ghcr.io/linuxserver/plex:latest
     restart: always
     ports:
       - 32400:32400
@@ -93,7 +93,7 @@ services:
 
   prowlarr:
     container_name: prowlarr
-    image: lscr.io/linuxserver/prowlarr:latest
+    image: ghcr.io/linuxserver/prowlarr:latest
     restart: always
     ports:
       - 9696:9696
@@ -115,7 +115,7 @@ services:
 
   qbittorrent:
     container_name: qbittorrent
-    image: lscr.io/linuxserver/qbittorrent:latest
+    image: ghcr.io/linuxserver/qbittorrent:latest
     restart: always
     environment:
       PUID: ${UID}
@@ -140,7 +140,7 @@ services:
 
   radarr:
     container_name: radarr
-    image: linuxserver/radarr:latest
+    image: ghcr.io/linuxserver/radarr:latest
     restart: always
     ports:
       - 7878:7878
@@ -168,7 +168,7 @@ services:
 
   sonarr:
     container_name: sonarr
-    image: linuxserver/sonarr:latest
+    image: ghcr.io/linuxserver/sonarr:latest
     restart: always
     ports:
       - 8989:8989
