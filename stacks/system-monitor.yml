@@ -54,7 +54,6 @@ services:
       - traefik.http.routers.grafana.tls.certResolver=default
       - traefik.http.routers.grafana.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.grafana.tls.domains[0].sans=*.${DOMAIN}
-      - traefik.http.routers.grafana.middlewares=tinyauth
 
   influxdb:
     container_name: influxdb
@@ -77,6 +76,28 @@ services:
       - traefik.http.routers.influxdb.tls.certResolver=default
       - traefik.http.routers.influxdb.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.influxdb.tls.domains[0].sans=*.${DOMAIN}
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: always
+    environment:
+      LOKI_PASSWORD: ${LOKI_PASSWORD}
+    ports:
+      - 3100:3100
+    volumes:
+      - ../config/loki:/etc/loki
+      - ${CONFIG}/loki:/tmp/loki
+    command: -config.file=/etc/loki/config.yml
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.loki.loadbalancer.server.port=3100
+      - traefik.http.routers.loki.rule=Host(`loki.${DOMAIN}`)
+      - traefik.http.routers.loki.entrypoints=websecure
+      - traefik.http.routers.loki.tls.certResolver=default
+      - traefik.http.routers.loki.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.loki.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.loki.middlewares=tinyauth
 
   scrutiny:
     container_name: scrutiny

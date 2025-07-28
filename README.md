@@ -53,6 +53,9 @@ TINYAUTH_USERS=
 
 #beszel
 BESZEL_KEY=
+
+# loki
+LOKI_PASSWORD=
 ```
 
 ## Applications
@@ -98,6 +101,7 @@ BESZEL_KEY=
 | beszel-agent | beszel agent                                    | 45876 |
 | grafana      | analytics & monitoring web interface            | 3000  |
 | influxdb     | time series database                            | 8086  |
+| loki         | log aggregation system                          | 3100  |
 | scrutiny     | s.m.a.r.t. monitoring and self influx db        | 8085  |
 | tautulli     | monitor and analytics for plex                  | 8181  |
 | telegraf     | server agent for collecting & reporting metrics | N/A   |
