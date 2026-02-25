@@ -41,3 +41,24 @@ services:
       - traefik.http.routers.nodered.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.nodered.tls.domains[0].sans=*.${DOMAIN}
       - traefik.http.routers.nodered.middlewares=tinyauth
+
+  scrypted:
+    image: ghcr.io/koush/scrypted:latest
+    container_name: scrypted
+    restart: always
+    environment:
+      PUID: ${UID}
+      PGID: ${GID}
+      TZ: ${TIMEZONE}
+    network_mode: host
+    volumes:
+      - ${CONFIG}/scrypted:/server/volume
+      - ${CONFIG}/scrypted/nvr:/nvr
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.scrypted.loadbalancer.server.port=10443
+      - traefik.http.routers.scrypted.rule=Host(`scrypted.${DOMAIN}`)
+      - traefik.http.routers.scrypted.entrypoints=websecure
+      - traefik.http.routers.scrypted.tls.certResolver=default
+      - traefik.http.routers.scrypted.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.scrypted.tls.domains[0].sans=*.${DOMAIN}
