@@ -24,24 +24,26 @@ services:
       - traefik.http.routers.homepage.tls.domains[0].sans=*.${DOMAIN}
       - traefik.http.routers.homepage.middlewares=tinyauth
 
-  linkding:
-    container_name: linkding
-    image: ghcr.io/sissbruecker/linkding:latest-plus
+  karakeep:
+    container_name: karakeep
+    image: ghcr.io/karakeep-app/karakeep:latest
     restart: always
     environment:
       PUID: ${UID}
       PGID: ${GID}
       TZ: ${TIMEZONE}
+      DATA_DIR: /data
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: ${KARAKEEP_SECRET}
     ports:
-      - 9090:9090
+      - 3002:3000
     volumes:
-      - ${CONFIG}/linkding:/etc/linkding/data
+      - ${CONFIG}/karakeep:/data
     labels:
       - traefik.enable=true
-      - traefik.http.services.linkding.loadbalancer.server.port=9090
-      - traefik.http.routers.linkding.rule=Host(`linkding.${DOMAIN}`)
-      - traefik.http.routers.linkding.entrypoints=websecure
-      - traefik.http.routers.linkding.tls.certResolver=default
-      - traefik.http.routers.linkding.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.linkding.tls.domains[0].sans=*.${DOMAIN}
-      - traefik.http.routers.linkding.middlewares=tinyauth
+      - traefik.http.services.karakeep.loadbalancer.server.port=3000
+      - traefik.http.routers.karakeep.rule=Host(`karakeep.${DOMAIN}`)
+      - traefik.http.routers.karakeep.entrypoints=websecure
+      - traefik.http.routers.karakeep.tls.certResolver=default
+      - traefik.http.routers.karakeep.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.karakeep.tls.domains[0].sans=*.${DOMAIN}
