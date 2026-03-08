@@ -45,9 +45,9 @@ services:
       - traefik.http.routers.jellyfin.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.jellyfin.tls.domains[0].sans=*.${DOMAIN}
 
-  overseerr:
-    image: ghcr.io/linuxserver/overseerr:latest
-    container_name: overseerr
+  seerr:
+    image: ghcr.io/seerr-team/seerr:latest
+    container_name: seerr
     restart: always
     ports:
       - 5055:5055
@@ -57,15 +57,15 @@ services:
       PGID: ${GID}
       LOG_LEVEL: debug
     volumes:
-      - ${CONFIG}/overseerr:/app/config
+      - ${CONFIG}/seerr:/app/config
     labels:
       - traefik.enable=true
-      - traefik.http.services.overseerr.loadbalancer.server.port=5055
-      - traefik.http.routers.overseerr.rule=Host(`overseerr.${DOMAIN}`)
-      - traefik.http.routers.overseerr.entrypoints=websecure
-      - traefik.http.routers.overseerr.tls.certResolver=default
-      - traefik.http.routers.overseerr.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.overseerr.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.services.seerr.loadbalancer.server.port=5055
+      - traefik.http.routers.seerr.rule=Host(`seerr.${DOMAIN}`)
+      - traefik.http.routers.seerr.entrypoints=websecure
+      - traefik.http.routers.seerr.tls.certResolver=default
+      - traefik.http.routers.seerr.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.seerr.tls.domains[0].sans=*.${DOMAIN}
 
   plex:
     container_name: plex
