@@ -3,7 +3,6 @@ services:
     container_name: homepage
     image: ghcr.io/gethomepage/homepage:latest
     restart: always
-    env_file: ../.env
     environment:
       HOMEPAGE_ALLOWED_HOSTS: ${HOST_IP}:3001,squats.${DOMAIN},homepage.${DOMAIN}
       TZ: ${TIMEZONE}
@@ -29,7 +28,6 @@ services:
     container_name: karakeep
     image: ghcr.io/karakeep-app/karakeep:latest
     restart: always
-    env_file: ../.env
     environment:
       PUID: ${UID}
       PGID: ${GID}

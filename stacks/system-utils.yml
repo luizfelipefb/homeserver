@@ -3,7 +3,6 @@ services:
     image: timothyjmiller/cloudflare-ddns:latest
     container_name: cloudflare-ddns
     restart: always
-    env_file: ../.env
     environment:
       PUID: ${UID}
       PGID: ${GID}
@@ -18,7 +17,6 @@ services:
     container_name: cloudflare-tunnel
     restart: always
     network_mode: host
-    env_file: ../.env
     environment:
       CLOUDFLARE_TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
     volumes:
@@ -32,7 +30,6 @@ services:
     image: pihole/pihole:latest
     restart: always
     network_mode: host
-    env_file: ../.env
     environment:
       TZ: ${TIMEZONE}
       FTLCONF_dns_interface: enp2s0
@@ -55,7 +52,6 @@ services:
     container_name: portainer
     image: portainer/portainer-ce:latest
     restart: always
-    env_file: ../.env
     ports:
       - 9000:9000
       - 9443:9443
@@ -75,7 +71,6 @@ services:
     container_name: postgres
     image: postgres:15
     restart: always
-    env_file: ../.env
     environment:
       TZ: ${TIMEZONE}
       PUID: ${UID}
@@ -96,7 +91,6 @@ services:
   speedtest-tracker:
     container_name: speedtest-tracker
     image: ghcr.io/linuxserver/speedtest-tracker:latest
-    env_file: ../.env
     ports:
       - 8083:80
     environment:
@@ -131,7 +125,6 @@ services:
     image: ghcr.io/steveiliop56/tinyauth:v4
     restart: always
     network_mode: host
-    env_file: ../.env
     environment:
       APP_URL: https://tinyauth.${DOMAIN}
       USERS: ${TINYAUTH_USERS}
@@ -155,7 +148,6 @@ services:
     image: traefik:latest
     restart: always
     network_mode: host
-    env_file: ../.env
     environment:
       CLOUDFLARE_EMAIL: ${CLOUDFLARE_EMAIL}
       CLOUDFLARE_API_KEY: ${CLOUDFLARE_API_KEY}
@@ -195,7 +187,6 @@ services:
     container_name: watchtower
     image: containrrr/watchtower:latest
     restart: always
-    env_file: ../.env
     ports:
       - 8084:8080
     environment:

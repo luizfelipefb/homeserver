@@ -1,9 +1,31 @@
 services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    container_name: audiobookshelf
+    restart: always
+    ports:
+      - 13378:80
+    volumes:
+      - ${MEDIA}/audiobooks:/audiobooks
+      - ${CONFIG}/audiobookshelf/config:/config
+      - ${CONFIG}/audiobookshelf/metadata:/metadata
+    environment:
+      - TZ=${TIMEZONE}
+      - PUID=${UID}
+      - PGID=${GID}
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.audiobookshelf.loadbalancer.server.port=80
+      - traefik.http.routers.audiobookshelf.rule=Host(`audiobookshelf.${DOMAIN}`)
+      - traefik.http.routers.audiobookshelf.entrypoints=websecure
+      - traefik.http.routers.audiobookshelf.tls.certResolver=default
+      - traefik.http.routers.audiobookshelf.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.audiobookshelf.tls.domains[0].sans=*.${DOMAIN}
+
   bazarr:
     container_name: bazarr
     image: ghcr.io/linuxserver/bazarr:latest
     restart: always
-    env_file: ../.env
     ports:
       - 6767:6767
     environment:
@@ -28,7 +50,6 @@ services:
     container_name: jellyfin
     image: ghcr.io/linuxserver/jellyfin:latest
     restart: always
-    env_file: ../.env
     ports:
       - 8096:8096
     environment:
@@ -51,7 +72,6 @@ services:
     image: ghcr.io/seerr-team/seerr:latest
     container_name: seerr
     restart: always
-    env_file: ../.env
     ports:
       - 5055:5055
     environment:
@@ -74,7 +94,6 @@ services:
     container_name: tautulli
     image: ghcr.io/linuxserver/tautulli:latest
     restart: always
-    env_file: ../.env
     ports:
       - 8181:8181
     environment:
@@ -97,7 +116,6 @@ services:
     container_name: plex
     image: ghcr.io/linuxserver/plex:latest
     restart: always
-    env_file: ../.env
     ports:
       - 32400:32400
     environment:
@@ -122,7 +140,6 @@ services:
     container_name: prowlarr
     image: ghcr.io/linuxserver/prowlarr:latest
     restart: always
-    env_file: ../.env
     ports:
       - 9696:9696
     environment:
@@ -145,7 +162,6 @@ services:
     container_name: qbittorrent
     image: ghcr.io/linuxserver/qbittorrent:latest
     restart: always
-    env_file: ../.env
     environment:
       PUID: ${UID}
       PGID: ${GID}
@@ -171,7 +187,6 @@ services:
     container_name: radarr
     image: ghcr.io/linuxserver/radarr:latest
     restart: always
-    env_file: ../.env
     ports:
       - 7878:7878
     depends_on:
@@ -200,7 +215,6 @@ services:
     container_name: sonarr
     image: ghcr.io/linuxserver/sonarr:latest
     restart: always
-    env_file: ../.env
     ports:
       - 8989:8989
     depends_on:

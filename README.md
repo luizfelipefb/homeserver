@@ -68,17 +68,18 @@ LOKI_PASSWORD=
 
 `make media-server`
 
-| service     | description                             | port  |
-| ----------- | --------------------------------------- | ----- |
-| bazarr      | subtitles manager                       | 6767  |
-| jellyfin    | media server                            | 8096  |
-| plex        | media server                            | 32400 |
-| prowlarr    | indexer manager                         | 9696  |
-| qbittorrent | torrent downloader                      | 8090  |
-| radarr      | movies PVR                              | 7878  |
-| seerr       | content requester                       | 5055  |
-| sonarr      | tv shows PVR                            | 8989  |
-| tautulli    | monitor and analytics for plex/jellyfin | 8181  |
+| service          | description                             | port  |
+| ---------------- | --------------------------------------- | ----- |
+| audiobookshelf   | audiobook and podcast server            | 13378 |
+| bazarr           | subtitles manager                       | 6767  |
+| jellyfin         | media server                            | 8096  |
+| plex             | media server                            | 32400 |
+| prowlarr         | indexer manager                         | 9696  |
+| qbittorrent      | torrent downloader                      | 8090  |
+| radarr           | movies PVR                              | 7878  |
+| seerr            | content requester                       | 5055  |
+| sonarr           | tv shows PVR                            | 8989  |
+| tautulli         | monitor and analytics for plex/jellyfin | 8181  |
 
 ## System Monitoring
 

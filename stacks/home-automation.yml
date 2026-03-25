@@ -2,7 +2,6 @@ services:
   homeassistant:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
-    env_file: ../.env
     volumes:
       - ${CONFIG}/homeassistant:/config
       - /etc/localtime:/etc/localtime:ro
@@ -29,7 +28,6 @@ services:
     container_name: nodered
     network_mode: host
     restart: always
-    env_file: ../.env
     environment:
       TZ: ${TIMEZONE}
     volumes:
@@ -48,7 +46,6 @@ services:
     image: ghcr.io/koush/scrypted:latest
     container_name: scrypted
     restart: always
-    env_file: ../.env
     environment:
       PUID: ${UID}
       PGID: ${GID}
