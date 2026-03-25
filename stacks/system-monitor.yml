@@ -3,7 +3,6 @@ services:
     image: ghcr.io/henrygd/beszel/beszel:latest
     container_name: beszel
     restart: always
-    env_file: ../.env
     environment:
       TZ: ${TIMEZONE}
     ports:
@@ -23,7 +22,6 @@ services:
     image: ghcr.io/henrygd/beszel/beszel-agent:0.12.3
     container_name: beszel-agent
     restart: always
-    env_file: ../.env
     ports:
       - 45876:45876
     environment:
@@ -39,7 +37,6 @@ services:
     image: ghcr.io/amir20/dozzle:latest
     container_name: dozzle
     restart: always
-    env_file: ../.env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ${CONFIG}/dozzle:/data
@@ -62,7 +59,6 @@ services:
     container_name: grafana
     image: grafana/grafana:latest
     restart: always
-    env_file: ../.env
     user: ${UID}
     ports:
       - 3000:3000
@@ -85,7 +81,6 @@ services:
     container_name: influxdb
     image: influxdb:latest
     restart: always
-    env_file: ../.env
     volumes:
       - ${CONFIG}/influxdb:/var/lib/influxdb
     healthcheck:
@@ -108,7 +103,6 @@ services:
     image: grafana/loki:latest
     container_name: loki
     restart: always
-    env_file: ../.env
     environment:
       LOKI_PASSWORD: ${LOKI_PASSWORD}
     ports:
@@ -131,7 +125,6 @@ services:
     container_name: scrutiny
     image: ghcr.io/analogj/scrutiny:master-omnibus
     restart: always
-    env_file: ../.env
     ports:
       - 8085:8080
     environment:
@@ -162,7 +155,6 @@ services:
     container_name: telegraf
     image: telegraf:latest
     restart: always
-    env_file: ../.env
     user: telegraf:${DOCKER_GID}
     depends_on:
       influxdb:
