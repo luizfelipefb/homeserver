@@ -26,5 +26,14 @@ storage_config:
     directory: /tmp/loki/chunks
 
 limits_config:
+  retention_period: 4320h
   reject_old_samples: true
   reject_old_samples_max_age: 4320h
+
+compactor:
+  working_directory: /tmp/loki/retention
+  compaction_interval: 10m
+  retention_enabled: true
+  retention_delete_delay: 2h
+  retention_delete_worker_count: 150
+  delete_request_store: filesystem
