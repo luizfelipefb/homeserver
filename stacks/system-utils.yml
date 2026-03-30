@@ -48,25 +48,6 @@ services:
       - traefik.http.routers.pihole.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.pihole.tls.domains[0].sans=*.${DOMAIN}
 
-  portainer:
-    container_name: portainer
-    image: portainer/portainer-ce:latest
-    restart: always
-    ports:
-      - 9000:9000
-      - 9443:9443
-    volumes:
-      - ${CONFIG}/portainer:/data
-      - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      - traefik.enable=true
-      - traefik.http.services.portainer.loadbalancer.server.port=9000
-      - traefik.http.routers.portainer.rule=Host(`portainer.${DOMAIN}`)
-      - traefik.http.routers.portainer.entrypoints=websecure
-      - traefik.http.routers.portainer.tls.certResolver=default
-      - traefik.http.routers.portainer.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.portainer.tls.domains[0].sans=*.${DOMAIN}
-
   postgres:
     container_name: postgres
     image: postgres:15
