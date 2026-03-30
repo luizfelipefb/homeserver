@@ -53,4 +53,4 @@ update: ## Update images
 
 prune: ## Prune dangling images
 	@echo -e '\n==> Pruning images\n'
-	@docker image prune -f
+	@docker system prune -f

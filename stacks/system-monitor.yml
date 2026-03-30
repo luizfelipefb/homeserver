@@ -19,7 +19,7 @@ services:
       - traefik.http.routers.beszel.tls.domains[0].sans=*.${DOMAIN}
 
   beszel-agent:
-    image: ghcr.io/henrygd/beszel/beszel-agent:0.12.3
+    image: ghcr.io/henrygd/beszel/beszel-agent:alpine
     container_name: beszel-agent
     restart: always
     ports:
@@ -28,8 +28,15 @@ services:
       TZ: ${TIMEZONE}
       LISTEN: 45876
       KEY: ${BESZEL_KEY}
+      TOKEN: ${BESZEL_TOKEN}
+      HUB_URL: https://beszel.${DOMAIN}
+    devices:
+      - /dev/sda:/dev/sda
+      - /dev/sdb:/dev/sdb
+    cap_add:
+      - SYS_RAWIO
+      - SYS_ADMIN
     volumes:
-      - ${CONFIG}/beszel-agent:/var/lib/beszel-agent
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /mnt/disk1/.beszel:/extra-filesystems/sdb:ro
 
