@@ -106,7 +106,6 @@ LOKI_PASSWORD=
 | cloudflare-ddns   | client used to update dynamic DNS entries for accounts | N/A         |
 | cloudflare-tunnel | cloudflare tunnel for secure remote access             | N/A         |
 | pihole            | network wide ad blocking, dns and dhcp server          | 8053        |
-| portainer         | container management                                   | 9000/9443   |
 | postgres          | db used by speedtest-tracker                           | N/A         |
 | speedtest-tracker | wan speed test tracker                                 | 8083        |
 | tinyauth          | secure your apps with a login screen                   | 3003        |
