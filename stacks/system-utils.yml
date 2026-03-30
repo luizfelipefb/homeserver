@@ -122,14 +122,14 @@ services:
 
   tinyauth:
     container_name: tinyauth
-    image: ghcr.io/steveiliop56/tinyauth:v4
+    image: ghcr.io/steveiliop56/tinyauth:latest
     restart: always
     network_mode: host
     environment:
-      APP_URL: https://tinyauth.${DOMAIN}
-      USERS: ${TINYAUTH_USERS}
-      PORT: 3003
-      LOG_LEVEL: trace
+      TINYAUTH_APPURL: https://tinyauth.${DOMAIN}
+      TINYAUTH_AUTH_USERS: ${TINYAUTH_USERS}
+      TINYAUTH_SERVER_PORT: 3003
+      TINYAUTH_LOG_LEVEL: trace
     volumes:
       - ${CONFIG}/tinyauth:/data
       - /var/run/docker.sock:/var/run/docker.sock
