@@ -4,9 +4,6 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export $(grep -v '^#' "$SCRIPT_DIR/.env" | xargs)
 
-# exporting the PATH is needed for bash to find the restic command
-export PATH="/home/luizfelipefb/.asdf/shims:$PATH"
-
 # set local restic repository and perform backup
 echo -e "\n-> Starting backup to local repository"
 export RESTIC_REPOSITORY="/mnt/pool/backup"
