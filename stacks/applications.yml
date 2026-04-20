@@ -47,3 +47,25 @@ services:
       - traefik.http.routers.karakeep.tls.certResolver=default
       - traefik.http.routers.karakeep.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.karakeep.tls.domains[0].sans=*.${DOMAIN}
+
+  vaultwarden:
+    container_name: vaultwarden
+    image: vaultwarden/server:latest
+    restart: always
+    environment:
+      TZ: ${TIMEZONE}
+      DOMAIN: https://vaultwarden.${DOMAIN}
+      ADMIN_TOKEN: ${VAULTWARDEN_ADMIN_TOKEN}
+      SIGNUPS_ALLOWED: "false"
+    ports:
+      - 8087:80
+    volumes:
+      - ${CONFIG}/vaultwarden:/data
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.vaultwarden.loadbalancer.server.port=80
+      - traefik.http.routers.vaultwarden.rule=Host(`vaultwarden.${DOMAIN}`)
+      - traefik.http.routers.vaultwarden.entrypoints=websecure
+      - traefik.http.routers.vaultwarden.tls.certResolver=default
+      - traefik.http.routers.vaultwarden.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.vaultwarden.tls.domains[0].sans=*.${DOMAIN}
