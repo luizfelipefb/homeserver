@@ -46,28 +46,6 @@ services:
       - traefik.http.routers.bazarr.tls.domains[0].sans=*.${DOMAIN}
       - traefik.http.routers.bazarr.middlewares=tinyauth
 
-  jellyfin:
-    container_name: jellyfin
-    image: ghcr.io/linuxserver/jellyfin:latest
-    restart: always
-    ports:
-      - 8096:8096
-    environment:
-      TZ: ${TIMEZONE}
-      PUID: ${UID}
-      PGID: ${GID}
-    volumes:
-      - ${CONFIG}/jellyfin:/config
-      - ${MEDIA}:/data
-    labels:
-      - traefik.enable=true
-      - traefik.http.services.jellyfin.loadbalancer.server.port=8096
-      - traefik.http.routers.jellyfin.rule=Host(`jellyfin.${DOMAIN}`)
-      - traefik.http.routers.jellyfin.entrypoints=websecure
-      - traefik.http.routers.jellyfin.tls.certResolver=default
-      - traefik.http.routers.jellyfin.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.jellyfin.tls.domains[0].sans=*.${DOMAIN}
-
   seerr:
     image: ghcr.io/seerr-team/seerr:latest
     container_name: seerr
