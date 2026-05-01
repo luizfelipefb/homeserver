@@ -29,10 +29,13 @@ HOST_IP=
 PLEX_CLAIM=
 WATCHTOWER_APIKEY=
 INFLUXDB_TOKEN=
+INFLUXDB_ADMIN_USERNAME=
+INFLUXDB_ADMIN_PASSWORD=
 KARAKEEP_SECRET=
 SPEEDTEST_APIKEY=
 BESZEL_KEY=
 BESZEL_TOKEN=
+VAULTWARDEN_ADMIN_TOKEN=
 
 # cloudflare
 CLOUDFLARE_TUNNEL_TOKEN=
@@ -50,10 +53,11 @@ LOKI_PASSWORD=
 
 `make applications`
 
-| service  | description           | port |
-| -------- | --------------------- | ---- |
-| homepage | application dashboard | 3001 |
-| karakeep | bookmarks manager     | 3002 |
+| service     | description           | port |
+| ----------- | --------------------- | ---- |
+| homepage    | application dashboard | 3001 |
+| karakeep    | bookmarks manager     | 3002 |
+| vaultwarden | password manager      | 8087 |
 
 ## Home Automation
 
@@ -69,18 +73,18 @@ LOKI_PASSWORD=
 
 `make media-server`
 
-| service          | description                             | port  |
-| ---------------- | --------------------------------------- | ----- |
-| audiobookshelf   | audiobook and podcast server            | 13378 |
-| bazarr           | subtitles manager                       | 6767  |
-| jellyfin         | media server                            | 8096  |
-| plex             | media server                            | 32400 |
-| prowlarr         | indexer manager                         | 9696  |
-| qbittorrent      | torrent downloader                      | 8090  |
-| radarr           | movies PVR                              | 7878  |
-| seerr            | content requester                       | 5055  |
-| sonarr           | tv shows PVR                            | 8989  |
-| tautulli         | monitor and analytics for plex/jellyfin | 8181  |
+| service        | description                             | port  |
+| -------------- | --------------------------------------- | ----- |
+| audiobookshelf | audiobook and podcast server            | 13378 |
+| bazarr         | subtitles manager                       | 6767  |
+| jellyfin       | media server                            | 8096  |
+| plex           | media server                            | 32400 |
+| prowlarr       | indexer manager                         | 9696  |
+| qbittorrent    | torrent downloader                      | 8090  |
+| radarr         | movies PVR                              | 7878  |
+| seerr          | content requester                       | 5055  |
+| sonarr         | tv shows PVR                            | 8989  |
+| tautulli       | monitor and analytics for plex/jellyfin | 8181  |
 
 ## System Monitoring
 
@@ -111,7 +115,3 @@ LOKI_PASSWORD=
 | tinyauth          | secure your apps with a login screen                   | 3003        |
 | traefik           | HTTP reverse proxy and load balancer                   | 80/443/8080 |
 | watchtower        | update the running version of your containerized apps  | 8084        |
-
-### Retention
-
-After installing influxdb, run `make create-retention DUR=<duration>` to set the retention duration (ns|u|µ|ms|s|m|h|d|w) for the telegraf database
