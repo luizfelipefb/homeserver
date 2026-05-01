@@ -6,6 +6,7 @@ services:
     ports:
       - 13378:80
     volumes:
+      - ${MEDIA}/books:/books
       - ${MEDIA}/audiobooks:/audiobooks
       - ${CONFIG}/audiobookshelf/config:/config
       - ${CONFIG}/audiobookshelf/metadata:/metadata
