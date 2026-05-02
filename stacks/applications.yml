@@ -1,4 +1,34 @@
 services:
+  backrest:
+    container_name: backrest
+    image: ghcr.io/garethgeorge/backrest:latest
+    restart: always
+    volumes:
+      - ${CONFIG}/backrest/data:/data
+      - ${CONFIG}/backrest/config:/config
+      - ${CONFIG}/backrest/cache:/cache
+      - ${CONFIG}/backrest/tmp:/tmp
+      - /mnt/pool/backup:/backups
+      - /home/luizfelipefb/appdata:/appdata
+      - /home/luizfelipefb/backup:/backup
+      - /home/luizfelipefb/homeserver:/homeserver
+    environment:
+      BACKREST_DATA: /data
+      BACKREST_CONFIG: /config/config.json
+      XDG_CACHE_HOME: /cache
+      TMPDIR: /tmp
+      TZ: ${TIMEZONE}
+    ports:
+      - 9898:9898
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.backrest.loadbalancer.server.port=9898
+      - traefik.http.routers.backrest.rule=Host(`backrest.${DOMAIN}`)
+      - traefik.http.routers.backrest.entrypoints=websecure
+      - traefik.http.routers.backrest.tls.certResolver=default
+      - traefik.http.routers.backrest.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.backrest.tls.domains[0].sans=*.${DOMAIN}
+
   homepage:
     container_name: homepage
     image: ghcr.io/gethomepage/homepage:latest

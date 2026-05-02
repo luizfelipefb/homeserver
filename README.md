@@ -9,7 +9,7 @@ Run `make <target>` to create the desired containers or `make all` to deploy eve
 Create an .env file with the following values:
 
 ```shell
-# user and groups id
+# general configuration
 TIMEZONE=
 UID=
 GID=
@@ -17,25 +17,37 @@ DOCKER_GID=
 
 # paths to config directory, transcode, media and download
 CONFIG=
-TRANSCODE=
-MEDIA=
 DOWNLOADS=
+MEDIA=
+TRANSCODE=
 
 # domain name for forwarding
 DOMAIN=
 HOST_IP=
 
-# apikeys
-PLEX_CLAIM=
-WATCHTOWER_APIKEY=
-INFLUXDB_TOKEN=
-INFLUXDB_ADMIN_USERNAME=
-INFLUXDB_ADMIN_PASSWORD=
-KARAKEEP_SECRET=
-SPEEDTEST_APIKEY=
+# beszel
 BESZEL_KEY=
 BESZEL_TOKEN=
+
+# inlfuxdb
+INFLUXDB_ADMIN_PASSWORD=
+INFLUXDB_ADMIN_USERNAME=
+INFLUXDB_TOKEN=
+
+# karakeep
+KARAKEEP_SECRET=
+
+# plex
+PLEX_CLAIM=
+
+# speedtest
+SPEEDTEST_APIKEY=
+
+# vaultwarden
 VAULTWARDEN_ADMIN_TOKEN=
+
+# watchtower
+WATCHTOWER_APIKEY=
 
 # cloudflare
 CLOUDFLARE_TUNNEL_TOKEN=
@@ -47,6 +59,11 @@ TINYAUTH_USERS=
 
 # loki
 LOKI_PASSWORD=
+
+# restic
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+RESTIC_PASSWORD=
 ```
 
 ## Applications
@@ -55,6 +72,7 @@ LOKI_PASSWORD=
 
 | service     | description           | port |
 | ----------- | --------------------- | ---- |
+| backrest    | backup manager        | 9898 |
 | homepage    | application dashboard | 3001 |
 | karakeep    | bookmarks manager     | 3002 |
 | vaultwarden | password manager      | 8087 |
@@ -77,7 +95,6 @@ LOKI_PASSWORD=
 | -------------- | --------------------------------------- | ----- |
 | audiobookshelf | audiobook and podcast server            | 13378 |
 | bazarr         | subtitles manager                       | 6767  |
-| jellyfin       | media server                            | 8096  |
 | plex           | media server                            | 32400 |
 | prowlarr       | indexer manager                         | 9696  |
 | qbittorrent    | torrent downloader                      | 8090  |

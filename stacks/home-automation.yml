@@ -57,6 +57,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.services.scrypted.loadbalancer.server.port=10443
+      - traefik.http.services.scrypted.loadbalancer.server.scheme=https
       - traefik.http.routers.scrypted.rule=Host(`scrypted.${DOMAIN}`)
       - traefik.http.routers.scrypted.entrypoints=websecure
       - traefik.http.routers.scrypted.tls.certResolver=default
