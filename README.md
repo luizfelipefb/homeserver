@@ -131,4 +131,4 @@ RESTIC_PASSWORD=
 | speedtest-tracker | wan speed test tracker                                 | 8083        |
 | tinyauth          | secure your apps with a login screen                   | 3003        |
 | traefik           | HTTP reverse proxy and load balancer                   | 80/443/8080 |
-| watchtower        | update the running version of your containerized apps  | 8084        |
+| whatsupdocker     | update the running version of your containerized apps  | 3004        |

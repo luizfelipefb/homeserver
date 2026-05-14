@@ -17,10 +17,9 @@ services:
     container_name: cloudflare-tunnel
     restart: always
     network_mode: host
+    user: ${UID}:${GID}
     environment:
       CLOUDFLARE_TUNNEL_TOKEN: ${CLOUDFLARE_TUNNEL_TOKEN}
-    volumes:
-      - ${CONFIG}/cloudflare-tunnel:/etc/cloudflared
     command: tunnel --loglevel debug run --token ${CLOUDFLARE_TUNNEL_TOKEN}
     labels:
       - traefik.enable=false
@@ -34,6 +33,8 @@ services:
       TZ: ${TIMEZONE}
       FTLCONF_dns_interface: enp2s0
       FTLCONF_webserver_port: 8053
+      PIHOLE_UID: ${UID}
+      PIHOLE_GID: ${GID}
     volumes:
       - ${CONFIG}/pihole/etc-pihole:/etc/pihole
       - ${CONFIG}/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
@@ -52,10 +53,9 @@ services:
     container_name: postgres
     image: postgres:15
     restart: always
+    user: "${UID}:${GID}"
     environment:
       TZ: ${TIMEZONE}
-      PUID: ${UID}
-      PGID: ${GID}
       POSTGRES_DB: speedtest_tracker
       POSTGRES_USER: speedy
       POSTGRES_PASSWORD: password
@@ -68,6 +68,7 @@ services:
       retries: 10
     labels:
       - traefik.enable=false
+      - wud.watch=false
 
   speedtest-tracker:
     container_name: speedtest-tracker
@@ -106,6 +107,7 @@ services:
     image: ghcr.io/steveiliop56/tinyauth:latest
     restart: always
     network_mode: host
+    user: ${UID}:${GID}
     environment:
       TINYAUTH_APPURL: https://tinyauth.${DOMAIN}
       TINYAUTH_AUTH_USERS: ${TINYAUTH_USERS}
@@ -165,18 +167,24 @@ services:
       - traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN}
       - traefik.http.routers.traefik.middlewares=tinyauth
 
-  watchtower:
-    container_name: watchtower
-    image: containrrr/watchtower:latest
+  wud:
+    container_name: wud
+    image: getwud/wud
     restart: always
     ports:
-      - 8084:8080
+      - 3004:3000
     environment:
       TZ: ${TIMEZONE}
-      WATCHTOWER_HTTP_API_TOKEN: ${WATCHTOWER_APIKEY}
-      WATCHTOWER_HTTP_API_METRICS: true
+      WUD_TRIGGER_DOCKER_LOCAL_PRUNE: "true"
     volumes:
+      - ${CONFIG}/wud:/store
       - /var/run/docker.sock:/var/run/docker.sock
-    command: --cleanup --interval 3600
     labels:
-      - traefik.enable=false
+      - traefik.enable=true
+      - traefik.http.services.wud.loadbalancer.server.port=3000
+      - traefik.http.routers.wud.rule=Host(`wud.${DOMAIN}`)
+      - traefik.http.routers.wud.entrypoints=websecure
+      - traefik.http.routers.wud.tls.certResolver=default
+      - traefik.http.routers.wud.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.wud.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.wud.middlewares=tinyauth

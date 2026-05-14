@@ -28,6 +28,7 @@ services:
     container_name: nodered
     network_mode: host
     restart: always
+    user: ${UID}:${GID}
     environment:
       TZ: ${TIMEZONE}
     volumes:
@@ -46,9 +47,8 @@ services:
     image: ghcr.io/koush/scrypted:latest
     container_name: scrypted
     restart: always
+    user: ${UID}:${GID}
     environment:
-      PUID: ${UID}
-      PGID: ${GID}
       TZ: ${TIMEZONE}
     network_mode: host
     volumes:

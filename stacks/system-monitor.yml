@@ -5,6 +5,8 @@ services:
     restart: always
     environment:
       TZ: ${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
     ports:
       - 8091:8090
     volumes:
@@ -22,6 +24,7 @@ services:
     image: ghcr.io/henrygd/beszel/beszel-agent:alpine
     container_name: beszel-agent
     restart: always
+    user: ${UID}:${DOCKER_GID}
     ports:
       - 45876:45876
     environment:
@@ -44,9 +47,9 @@ services:
     image: ghcr.io/amir20/dozzle:latest
     container_name: dozzle
     restart: always
+    user: ${UID}:${DOCKER_GID}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${CONFIG}/dozzle:/data
     ports:
       - 8092:8080
     environment:
@@ -88,6 +91,7 @@ services:
     container_name: influxdb
     image: influxdb:2
     restart: always
+    user: ${UID}:${GID}
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
       DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_ADMIN_USERNAME}
@@ -112,11 +116,13 @@ services:
       - traefik.http.routers.influxdb.tls.certResolver=default
       - traefik.http.routers.influxdb.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.influxdb.tls.domains[0].sans=*.${DOMAIN}
+      - wud.watch=false
 
   loki:
     image: grafana/loki:latest
     container_name: loki
     restart: always
+    user: ${UID}:${GID}
     environment:
       LOKI_PASSWORD: ${LOKI_PASSWORD}
     ports:
@@ -169,7 +175,7 @@ services:
     container_name: telegraf
     image: telegraf:latest
     restart: always
-    user: telegraf:${DOCKER_GID}
+    user: ${UID}:${DOCKER_GID}
     depends_on:
       influxdb:
         condition: service_healthy

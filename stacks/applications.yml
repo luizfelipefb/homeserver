@@ -18,6 +18,8 @@ services:
       XDG_CACHE_HOME: /cache
       TMPDIR: /tmp
       TZ: ${TIMEZONE}
+      PUID: ${UID}
+      PGID: ${GID}
     ports:
       - 9898:9898
     labels:
@@ -58,9 +60,8 @@ services:
     container_name: karakeep
     image: ghcr.io/karakeep-app/karakeep:latest
     restart: always
+    user: ${UID}:${GID}
     environment:
-      PUID: ${UID}
-      PGID: ${GID}
       TZ: ${TIMEZONE}
       DATA_DIR: /data
       NEXTAUTH_URL: http://localhost:3000
@@ -82,6 +83,7 @@ services:
     container_name: vaultwarden
     image: vaultwarden/server:latest
     restart: always
+    user: ${UID}:${GID}
     environment:
       TZ: ${TIMEZONE}
       DOMAIN: https://vaultwarden.${DOMAIN}

@@ -3,6 +3,7 @@ services:
     image: ghcr.io/advplyr/audiobookshelf:latest
     container_name: audiobookshelf
     restart: always
+    user: "${UID}:${GID}"
     ports:
       - 13378:80
     volumes:
@@ -12,8 +13,6 @@ services:
       - ${CONFIG}/audiobookshelf/metadata:/metadata
     environment:
       - TZ=${TIMEZONE}
-      - PUID=${UID}
-      - PGID=${GID}
     labels:
       - traefik.enable=true
       - traefik.http.services.audiobookshelf.loadbalancer.server.port=80
@@ -100,8 +99,8 @@ services:
     environment:
       TZ: ${TIMEZONE}
       PLEX_CLAIM: ${PLEX_CLAIM}
-      PLEX_UID: ${UID}
-      PLEX_GID: ${GID}
+      PUID: ${UID}
+      PGID: ${GID}
     volumes:
       - ${CONFIG}/plex:/config
       - ${TRANSCODE}:/transcode
