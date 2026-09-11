@@ -79,6 +79,26 @@ services:
       - traefik.http.routers.karakeep.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.karakeep.tls.domains[0].sans=*.${DOMAIN}
 
+  pocketbase:
+    container_name: pocketbase
+    image: ghcr.io/muchobien/pocketbase:latest
+    restart: always
+    environment:
+      TZ: ${TIMEZONE}
+    ports:
+      - 8093:8090
+    volumes:
+      - ${CONFIG}/pocketbase/data:/pb_data
+      - ${CONFIG}/pocketbase/public:/pb_public
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.pocketbase.loadbalancer.server.port=8090
+      - traefik.http.routers.pocketbase.rule=Host(`pocketbase.${DOMAIN}`)
+      - traefik.http.routers.pocketbase.entrypoints=websecure
+      - traefik.http.routers.pocketbase.tls.certResolver=default
+      - traefik.http.routers.pocketbase.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.pocketbase.tls.domains[0].sans=*.${DOMAIN}
+
   vaultwarden:
     container_name: vaultwarden
     image: vaultwarden/server:latest

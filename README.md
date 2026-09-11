@@ -70,12 +70,13 @@ RESTIC_PASSWORD=
 
 `make applications`
 
-| service     | description           | port |
-| ----------- | --------------------- | ---- |
-| backrest    | backup manager        | 9898 |
-| homepage    | application dashboard | 3001 |
-| karakeep    | bookmarks manager     | 3002 |
-| vaultwarden | password manager      | 8087 |
+| service     | description              | port |
+| ----------- | ------------------------ | ---- |
+| backrest    | backup manager           | 9898 |
+| homepage    | application dashboard    | 3001 |
+| karakeep    | bookmarks manager        | 3002 |
+| pocketbase  | open source db in 1 file | 8093 |
+| vaultwarden | password manager         | 8087 |
 
 ## Home Automation
 
