@@ -176,6 +176,8 @@ services:
     environment:
       TZ: ${TIMEZONE}
       WUD_TRIGGER_DOCKER_LOCAL_PRUNE: "true"
+      WUD_AUTH_ADMIN_USER: ${WUD_ADMIN_USER}
+      WUD_AUTH_ADMIN_PASSWORD: ${WUD_ADMIN_PASSWORD}
     volumes:
       - ${CONFIG}/wud:/store
       - /var/run/docker.sock:/var/run/docker.sock
