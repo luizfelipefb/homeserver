@@ -173,12 +173,12 @@ services:
       TZ: ${TIMEZONE}
       PUID: ${UID}
       PGID: ${GID}
+      RADARR__AUTH__METHOD: External
+      RADARR__AUTH__REQUIRED: DisabledForLocalAddresses
     volumes:
       - ${CONFIG}/radarr:/config
       - ${MEDIA}/movies:/movies
       - ${DOWNLOADS}:/downloads
-      - ../scripts:/scripts
-      - ../.env:/scripts/.env
     labels:
       - traefik.enable=true
       - traefik.http.services.radarr.loadbalancer.server.port=7878
@@ -201,12 +201,12 @@ services:
       TZ: ${TIMEZONE}
       PUID: ${UID}
       PGID: ${GID}
+      SONARR__AUTH__METHOD: External
+      SONARR__AUTH__REQUIRED: DisabledForLocalAddresses
     volumes:
       - ${CONFIG}/sonarr:/config
       - ${MEDIA}/tvshows:/tvshows
       - ${DOWNLOADS}:/downloads
-      - ../scripts:/scripts
-      - ../.env:/scripts/.env
     labels:
       - traefik.enable=true
       - traefik.http.services.sonarr.loadbalancer.server.port=8989
