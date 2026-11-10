@@ -1,56 +1,63 @@
 .DEFAULT_GOAL := help
 
-help: ## Show this help
+# Don't print "Entering/Leaving directory" for sub-makes (used by `uap`)
+MAKEFLAGS += --no-print-directory
+
+# Every stack lives in stacks/<name>.yml and runs as its own compose project.
+STACKS := home-automation media-server system-monitor system-utils applications
+
+# Retention used by `make set-retention` (override with DUR=24h)
+DUR ?= 168h
+
+# $(call compose,<stack>) -> base docker compose command for that stack
+compose = docker compose -p $(1) -f stacks/$(1).yml --env-file .env
+
+# None of these targets are files
+.PHONY: help all down uap uapf update prune set-retention $(STACKS)
+
+# Lines starting with "## " directly above a target are shown by `make help`
+## Show this help
+help:
 	@echo -e '\n Usage:'
 	@echo 'make <target>'
 	@echo
 	@echo ' Targets:'
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "%-30s %s\n", $$1, $$2}'
+	@{ awk '/^## /{d=substr($$0,4); next} /^[a-zA-Z_-]+:/{if(d!=""){split($$0,a,":"); printf "%-30s %s\n", a[1], d} d=""; next} {d=""}' $(MAKEFILE_LIST); \
+	   for s in $(STACKS); do printf "%-30s %s\n" "$$s" "Create $$s containers (FORCE=1 to recreate them all)"; done; } | sort
 
-all: home-automation media-server system-monitor system-utils applications ## Create all containers
+## Create all containers
+all: $(STACKS)
 
-down: ## Stop and remove all containers
+# Create/update one stack. Containers are only recreated when their config or
+# image changed; run `make <stack> FORCE=1` to recreate them regardless.
+$(STACKS):
+	@echo -e '\n==> Creating $(subst -, ,$@) containers\n'
+	@$(call compose,$@) up -d --remove-orphans $(if $(FORCE),--force-recreate)
+
+## Stop and remove all containers
+down:
 	@echo -e '\n==> Stopping all containers\n'
-	@docker compose -p home-automation -f stacks/home-automation.yml --env-file .env down
-	@docker compose -p media-server -f stacks/media-server.yml --env-file .env down
-	@docker compose -p system-monitor -f stacks/system-monitor.yml --env-file .env down
-	@docker compose -p system-utils -f stacks/system-utils.yml --env-file .env down
-	@docker compose -p applications -f stacks/applications.yml --env-file .env down
+	@for s in $(STACKS); do $(call compose,$$s) down; done
 
-uap: update all prune ## Update, recreate and prune all containers
+## Update images and recreate only the containers that changed, then prune
+uap:
+	@$(MAKE) update && $(MAKE) all && $(MAKE) prune
 
-home-automation: ## Create home automation containers
-	@echo -e '\n==> Creating Home Automation containers\n'
-	@docker compose -p home-automation -f stacks/home-automation.yml --env-file .env up -d --remove-orphans --force-recreate
+## Update images, force-recreate all containers, then prune
+uapf:
+	@$(MAKE) update && $(MAKE) all FORCE=1 && $(MAKE) prune
 
-media-server: ## Create media server containers
-	@echo -e '\n==> Creating Media Server containers\n'
-	@docker compose -p media-server -f stacks/media-server.yml --env-file .env up -d --remove-orphans --force-recreate
-
-system-monitor: ## Create system monitor containers
-	@echo -e '\n==> Creating System Monitor containers\n'
-	@docker compose -p system-monitor -f stacks/system-monitor.yml --env-file .env up -d --remove-orphans --force-recreate
-
-system-utils: ## Create system utils containers
-	@echo -e '\n==> Creating System Utils containers\n'
-	@docker compose -p system-utils -f stacks/system-utils.yml --env-file .env up -d --remove-orphans --force-recreate
-
-applications: ## Create applications containers
-	@echo -e '\n==> Creating Applications containers\n'
-	@docker compose -p applications -f stacks/applications.yml --env-file .env up -d --remove-orphans --force-recreate
-
-create-retention: ## Create retention policy for telegraf influx database
-	@echo -e '\n==> Adding retention policy for telegraf db\n'
-	@curl -i -XPOST http://localhost:8086/query --data-urlencode "q=CREATE RETENTION POLICY "one_week_only" ON "telegraf" DURATION $(DUR) REPLICATION 1 DEFAULT"
-
-update: ## Update images
+## Update images
+update:
 	@echo -e '\n==> Updating images'
-	@docker compose -p home-automation -f stacks/home-automation.yml --env-file .env pull
-	@docker compose -p media-server -f stacks/media-server.yml --env-file .env pull
-	@docker compose -p system-monitor -f stacks/system-monitor.yml --env-file .env pull
-	@docker compose -p system-utils -f stacks/system-utils.yml --env-file .env pull
-	@docker compose -p applications -f stacks/applications.yml --env-file .env pull
+	@for s in $(STACKS); do $(call compose,$$s) pull; done
 
-prune: ## Prune dangling images
-	@echo -e '\n==> Pruning images\n'
-	@docker system prune -f
+## Prune dangling images
+prune:
+	@echo -e '\n==> Pruning dangling images\n'
+	@docker image prune -f
+
+## Set the retention of the influxdb telegraf bucket (DUR=168h)
+set-retention:
+	@echo -e '\n==> Setting telegraf bucket retention to $(DUR)\n'
+	@docker exec influxdb sh -c 'influx bucket update --org org --name telegraf --retention "$$1" --token "$$DOCKER_INFLUXDB_INIT_ADMIN_TOKEN"' _ $(DUR)
