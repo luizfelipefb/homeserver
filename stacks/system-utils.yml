@@ -24,30 +24,25 @@ services:
     labels:
       - traefik.enable=false
 
-  pihole:
-    container_name: pihole
-    image: pihole/pihole:latest
+  adguard:
+    container_name: adguard
+    image: adguard/adguardhome:latest
     restart: always
     network_mode: host
+    user: ${UID}:${GID}
     environment:
       TZ: ${TIMEZONE}
-      FTLCONF_dns_interface: enp2s0
-      FTLCONF_webserver_port: 8053
-      PIHOLE_UID: ${UID}
-      PIHOLE_GID: ${GID}
     volumes:
-      - ${CONFIG}/pihole/etc-pihole:/etc/pihole
-      - ${CONFIG}/pihole/etc-dnsmasq.d:/etc/dnsmasq.d
-    cap_add:
-      - NET_ADMIN
+      - ${CONFIG}/adguard/work:/opt/adguardhome/work
+      - ${CONFIG}/adguard/conf:/opt/adguardhome/conf
     labels:
       - traefik.enable=true
-      - traefik.http.services.pihole.loadbalancer.server.port=8053
-      - traefik.http.routers.pihole.rule=Host(`pihole.${DOMAIN}`)
-      - traefik.http.routers.pihole.entrypoints=websecure
-      - traefik.http.routers.pihole.tls.certResolver=default
-      - traefik.http.routers.pihole.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.pihole.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.services.adguard.loadbalancer.server.port=8053
+      - traefik.http.routers.adguard.rule=Host(`adguard.${DOMAIN}`)
+      - traefik.http.routers.adguard.entrypoints=websecure
+      - traefik.http.routers.adguard.tls.certResolver=default
+      - traefik.http.routers.adguard.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.adguard.tls.domains[0].sans=*.${DOMAIN}
 
   postgres:
     container_name: postgres
