@@ -63,7 +63,7 @@ services:
       retries: 10
     labels:
       - traefik.enable=false
-      - wud.watch=false
+      - dev.dozzle.update=off
 
   speedtest-tracker:
     container_name: speedtest-tracker
@@ -162,26 +162,26 @@ services:
       - traefik.http.routers.traefik.tls.domains[0].sans=*.${DOMAIN}
       - traefik.http.routers.traefik.middlewares=tinyauth
 
-  wud:
-    container_name: wud
-    image: getwud/wud
-    restart: always
-    ports:
-      - 3004:3000
-    environment:
-      TZ: ${TIMEZONE}
-      WUD_TRIGGER_DOCKER_LOCAL_PRUNE: "true"
-      WUD_AUTH_ADMIN_USER: ${WUD_ADMIN_USER}
-      WUD_AUTH_ADMIN_PASSWORD: ${WUD_ADMIN_PASSWORD}
-    volumes:
-      - ${CONFIG}/wud:/store
-      - /var/run/docker.sock:/var/run/docker.sock
-    labels:
-      - traefik.enable=true
-      - traefik.http.services.wud.loadbalancer.server.port=3000
-      - traefik.http.routers.wud.rule=Host(`wud.${DOMAIN}`)
-      - traefik.http.routers.wud.entrypoints=websecure
-      - traefik.http.routers.wud.tls.certResolver=default
-      - traefik.http.routers.wud.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.wud.tls.domains[0].sans=*.${DOMAIN}
-      - traefik.http.routers.wud.middlewares=tinyauth
+#  wud:
+#    container_name: wud
+#    image: getwud/wud
+#    restart: always
+#    ports:
+#      - 3004:3000
+#    environment:
+#      TZ: ${TIMEZONE}
+#      WUD_TRIGGER_DOCKER_LOCAL_PRUNE: "true"
+#      WUD_AUTH_ADMIN_USER: ${WUD_ADMIN_USER}
+#      WUD_AUTH_ADMIN_PASSWORD: ${WUD_ADMIN_PASSWORD}
+#    volumes:
+#      - ${CONFIG}/wud:/store
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    labels:
+#      - traefik.enable=true
+#      - traefik.http.services.wud.loadbalancer.server.port=3000
+#      - traefik.http.routers.wud.rule=Host(`wud.${DOMAIN}`)
+#      - traefik.http.routers.wud.entrypoints=websecure
+#      - traefik.http.routers.wud.tls.certResolver=default
+#      - traefik.http.routers.wud.tls.domains[0].main=${DOMAIN}
+#      - traefik.http.routers.wud.tls.domains[0].sans=*.${DOMAIN}
+#      - traefik.http.routers.wud.middlewares=tinyauth
