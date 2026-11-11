@@ -1,0 +1,5 @@
+/* Cap the dashboard width (fullWidth: true in settings.yaml removes the default cap) */
+#inner_wrapper > div {
+  max-width: 2200px;
+  margin-inline: auto;
+}

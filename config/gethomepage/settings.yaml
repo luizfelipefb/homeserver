@@ -1,0 +1,43 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/en/configs/settings
+
+title: squats
+
+headerStyle: clean
+
+target: _blank
+
+quicklaunch:
+  searchDescriptions: true
+  hideInternetSearch: true
+  hideVisitURL: true
+
+hideVersion: true
+
+useEqualHeights: true
+
+color: stone
+
+maxGroupColumns: 5
+fullWidth: true
+
+layout:
+  Media:
+    icon: mdi-play-circle-outline
+  arr:
+    icon: mdi-download-circle-outline
+  Network:
+    icon: mdi-lan
+  Monitoring:
+    icon: mdi-monitor-dashboard
+  Schedule & Markets:
+    icon: mdi-calendar
+  Home:
+    icon: mdi-home-circle-outline
+  Security:
+    icon: mdi-shield-lock-outline
+  Data:
+    icon: mdi-database-sync-outline
+  Tools:
+    icon: mdi-tools

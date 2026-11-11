@@ -1,0 +1,321 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/en/configs/services
+
+- Media:
+    - Audiobookshelf:
+        description: Audiobookshelf Media Server
+        icon: audiobookshelf
+        href: https://audiobookshelf.luizfelipefb.com
+        server: my-docker
+        container: audiobookshelf
+        widget:
+          type: audiobookshelf
+          url: http://10.69.4.20:13378
+          key: "{{HOMEPAGE_VAR_AUDIOBOOKSHELF_KEY}}"
+    - Seerr:
+        description: Media Requests
+        icon: seerr
+        href: https://seerr.luizfelipefb.com
+        server: my-docker
+        container: seerr
+        widget:
+            type: seerr
+            url: https://seerr.luizfelipefb.com
+            key: "{{HOMEPAGE_VAR_SEERR_KEY}}"
+    - Plex:
+        description: Plex Media Server
+        icon: plex
+        href: https://plex.luizfelipefb.com
+        server: my-docker
+        container: plex
+        widget:
+          type: plex
+          url: http://10.69.4.20:32400
+          key: "{{HOMEPAGE_VAR_PLEX_KEY}}"
+    - Tautulli:
+        description: Plex Status
+        icon: tautulli
+        href: https://tautulli.luizfelipefb.com
+        server: my-docker
+        container: tautulli
+        widget:
+          type: tautulli
+          url: http://10.69.4.20:8181
+          key: "{{HOMEPAGE_VAR_TAUTULLI_KEY}}"
+
+- arr:
+    - Sonarr:
+        description: TV Shows
+        icon: sonarr
+        href: https://sonarr.luizfelipefb.com
+        server: my-docker
+        container: sonarr
+        widget:
+          type: sonarr
+          url: http://10.69.4.20:8989
+          key: "{{HOMEPAGE_VAR_SONARR_KEY}}"
+    - Radarr:
+        description: Movies
+        icon: radarr
+        href: https://radarr.luizfelipefb.com
+        server: my-docker
+        container: radarr
+        widget:
+          type: radarr
+          url: http://10.69.4.20:7878
+          key: "{{HOMEPAGE_VAR_RADARR_KEY}}"
+    - Prowlarr:
+        description: Indexers
+        icon: prowlarr
+        href: https://prowlarr.luizfelipefb.com
+        server: my-docker
+        container: prowlarr
+        widget:
+          type: prowlarr
+          url: http://10.69.4.20:9696
+          key: "{{HOMEPAGE_VAR_PROWLARR_KEY}}"
+    - Bazarr:
+        description: Subtitles
+        icon: bazarr
+        href: https://bazarr.luizfelipefb.com
+        server: my-docker
+        container: bazarr
+        widget:
+          type: bazarr
+          url: http://10.69.4.20:6767
+          key: "{{HOMEPAGE_VAR_BAZARR_KEY}}"
+
+- Network:
+    - AdGuard:
+        description: Network DNS and ad blocking
+        icon: adguard-home
+        href: https://adguard.luizfelipefb.com
+        server: my-docker
+        container: adguard
+        widget:
+          type: adguard
+          url: http://10.69.4.20:8053
+          username: "{{HOMEPAGE_VAR_ADGUARD_USERNAME}}"
+          password: "{{HOMEPAGE_VAR_ADGUARD_PASSWORD}}"
+    - Traefik:
+        description: Reverse Proxy
+        icon: traefik
+        href: https://traefik.luizfelipefb.com
+        server: my-docker
+        container: traefik
+        widget:
+          type: traefik
+          url: http://10.69.4.20:8080
+          username: "{{HOMEPAGE_VAR_TRAEFIK_USERNAME}}"
+          password: "{{HOMEPAGE_VAR_TRAEFIK_PASSWORD}}"
+    - qBittorrent:
+        description: Torrent Downloader
+        icon: qbittorrent
+        href: https://qbittorrent.luizfelipefb.com
+        server: my-docker
+        container: qbittorrent
+        widget:
+          type: qbittorrent
+          url: http://10.69.4.20:8090
+          username: "{{HOMEPAGE_VAR_QBITTORRENT_USERNAME}}"
+          password: "{{HOMEPAGE_VAR_QBITTORRENT_PASSWORD}}"
+
+- Monitoring:
+    - Beszel:
+        description: Docker Monitoring
+        icon: beszel
+        href: https://beszel.luizfelipefb.com
+        server: my-docker
+        container: beszel
+        widget:
+          type: beszel
+          url: http://10.69.4.20:8091
+          username: "{{HOMEPAGE_VAR_BESZEL_USERNAME}}"
+          password: "{{HOMEPAGE_VAR_BESZEL_PASSWORD}}"
+          systemId: squats
+          version: 2
+    - Grafana:
+        description: Analytics & Monitoring
+        icon: grafana
+        href: https://grafana.luizfelipefb.com
+        server: my-docker
+        container: grafana
+        widget:
+          type: grafana
+          url: http://10.69.4.20:3000
+          username: "{{HOMEPAGE_VAR_GRAFANA_USERNAME}}"
+          password: "{{HOMEPAGE_VAR_GRAFANA_PASSWORD}}"
+    - Scrutiny:
+        description: S.M.A.R.T Monitoring
+        icon: scrutiny
+        href: https://scrutiny.luizfelipefb.com
+        server: my-docker
+        container: scrutiny
+        widget:
+          type: scrutiny
+          url: http://10.69.4.20:8085
+    - SpeedTest:
+        description: Speed Test Tracker
+        icon: speedtest-tracker
+        href: https://speedtest.luizfelipefb.com
+        server: my-docker
+        container: speedtest-tracker
+        widget:
+          type: speedtest
+          url: http://10.69.4.20:8083
+
+- Schedule & Markets:
+    - Coin Market Cap:
+        widget:
+          type: coinmarketcap
+          url: https://coinmarketcap.com
+          key: "{{HOMEPAGE_VAR_COIN_MARKET_CAP_KEY}}"
+          currency: USD
+          symbols: [BTC, ETH, SOL, CRO]
+          defaultinterval: 24h
+    - Calendar:
+        widget:
+          type: calendar
+          firstDayInWeek: sunday
+          view: monthly
+          showTime: true
+          integrations:
+            - service_group: arr
+              type: sonarr
+              service_name: Sonarr
+            - service_group: arr
+              type: radarr
+              service_name: Radarr
+
+- Home:
+    - Home Assistant:
+        description: Home Assistant
+        icon: home-assistant
+        href: https://homeassistant.luizfelipefb.com
+        server: my-docker
+        container: homeassistant
+        widget:
+          type: homeassistant
+          url: http://10.69.4.20:8123
+          key: "{{HOMEPAGE_VAR_HOME_ASSISTANT_KEY}}"
+          custom:
+            - state: sensor.sarah_temperature
+              label: SARAH TEMP
+            - state: sensor.arthur_temperature
+              label: ARTHUR TEMP
+            - template: "{{ states.light | selectattr('entity_id', 'search', '_pri_') | selectattr('state','equalto','on') | list | length }}"
+              label: LIGHTS ON
+    - Node-RED:
+        description: Low-code programming for event-driven applications
+        icon: node-red
+        href: http://nodered.luizfelipefb.com
+        server: my-docker
+        container: nodered
+    # - PiHole:
+    #     description: Network DNS and DHCP
+    #     icon: pi-hole
+    #     href: https://pihole.luizfelipefb.com/admin
+    #     server: my-docker
+    #     container: pihole
+    #     widget:
+    #       type: pihole
+    #       url: http://10.69.4.20:8053
+    #       version: 6
+    #       key: REDACTED
+    - Scrypted:
+        description: Home Automation Video & IoT Platform
+        icon: scrypted
+        href: https://scrypted.luizfelipefb.com
+        server: my-docker
+        container: scrypted
+
+- Security:
+    - Tinyauth:
+        description: Login screen for protected services
+        icon: tinyauth
+        href: https://tinyauth.luizfelipefb.com
+        server: my-docker
+        container: tinyauth
+    - Vaultwarden:
+        description: Password Manager
+        icon: vaultwarden
+        href: https://vaultwarden.luizfelipefb.com
+        server: my-docker
+        container: vaultwarden
+    - cloudflare-tunnel:
+        description: CloudFlare Tunnel
+        icon: cloudflare
+        server: my-docker
+        container: cloudflare-tunnel
+    - cloudflare-ddns:
+        description: CloudFlare Dynamic DNS
+        icon: cloudflare
+        server: my-docker
+        container: cloudflare-ddns
+
+- Data:
+    - Beszel Agent:
+        description: Beszel Agent for Docker Monitoring
+        icon: beszel
+        server: my-docker
+        container: beszel-agent
+    - InfluxDB:
+        description: Database
+        icon: influxdb
+        href: https://influxdb.luizfelipefb.com
+        server: my-docker
+        container: influxdb
+    - Loki:
+        description: Log aggregation system
+        icon: loki
+        href: https://loki.luizfelipefb.com/ready
+        server: my-docker
+        container: loki
+    - PocketBase:
+        description: Open Source backend in 1 file
+        icon: pocketbase
+        href: https://pocketbase.luizfelipefb.com/_/
+        server: my-docker
+        container: pocketbase
+    - Postgres:
+        description: Database for speedtest-tracker
+        icon: postgres
+        server: my-docker
+        container: postgres
+    - Telegraf:
+        description: Agent for collecting metrics and events
+        icon: telegraf
+        server: my-docker
+        container: telegraf
+
+- Tools:
+    - backrest:
+        description: Backrest - Backup Manager
+        icon: backrest
+        href: https://backrest.luizfelipefb.com
+        server: my-docker
+        container: backrest
+        widget:
+          type: backrest
+          url: https://backrest.luizfelipefb.com
+          username: "{{HOMEPAGE_VAR_BACKREST_USERNAME}}"
+          password: "{{HOMEPAGE_VAR_BACKREST_PASSWORD}}"
+    - Karakeep:
+        description: Bookmarks Manager
+        icon: karakeep
+        href: https://karakeep.luizfelipefb.com
+        server: my-docker
+        container: karakeep
+    - Homepage:
+        description: Application Dashboard
+        icon: homepage
+        href: https://homepage.luizfelipefb.com
+        server: my-docker
+        container: gethomepage
+    - Dozzle:
+        description: Docker Logs Viewer
+        icon: dozzle
+        href: https://dozzle.luizfelipefb.com
+        server: my-docker
+        container: dozzle

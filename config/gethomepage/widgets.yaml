@@ -1,0 +1,40 @@
+---
+# For configuration options and examples, please see:
+# https://gethomepage.dev/en/configs/widgets
+
+- logo:
+    icon: mdi-server
+
+- resources:
+    label: System
+    expanded: true
+    cpu: true
+    memory: true
+    cputemp: true
+    uptime: true
+
+- resources:
+    label: /
+    expanded: true
+    disk: /
+
+- resources:
+    label: disk1
+    expanded: true
+    disk: 
+     - /mnt/disk1
+
+- datetime:
+    text_size: md
+    format:
+      dateStyle: long
+      timeStyle: short
+      hourCycle: h23
+
+- weatherapi:
+    label: Belo Horizonte
+    latitude: "{{HOMEPAGE_VAR_WEATHER_LATITUDE}}"
+    longitude: "{{HOMEPAGE_VAR_WEATHER_LONGITUDE}}"
+    units: metric
+    apiKey: "{{HOMEPAGE_VAR_WEATHER_API_KEY}}"
+    cache: 5

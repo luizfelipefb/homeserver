@@ -31,10 +31,12 @@ services:
       - traefik.http.routers.backrest.tls.domains[0].main=${DOMAIN}
       - traefik.http.routers.backrest.tls.domains[0].sans=*.${DOMAIN}
 
-  homepage:
-    container_name: homepage
+  gethomepage:
+    container_name: gethomepage
     image: ghcr.io/gethomepage/homepage:latest
     restart: always
+    env_file:
+      - ../config/gethomepage/.env
     environment:
       HOMEPAGE_ALLOWED_HOSTS: ${HOST_IP}:3001,squats.${DOMAIN},homepage.${DOMAIN}
       TZ: ${TIMEZONE}
@@ -43,18 +45,20 @@ services:
     ports:
       - 3001:3000
     volumes:
-      - ${CONFIG}/homepage:/app/config
+      - ../config/gethomepage:/app/config
       - /var/run/docker.sock:/var/run/docker.sock
       - /mnt/disk1:/mnt/disk1
+    tmpfs:
+      - /app/config/logs
     labels:
       - traefik.enable=true
-      - traefik.http.services.homepage.loadbalancer.server.port=3000
-      - traefik.http.routers.homepage.rule=Host(`homepage.${DOMAIN}`)
-      - traefik.http.routers.homepage.entrypoints=websecure
-      - traefik.http.routers.homepage.tls.certResolver=default
-      - traefik.http.routers.homepage.tls.domains[0].main=${DOMAIN}
-      - traefik.http.routers.homepage.tls.domains[0].sans=*.${DOMAIN}
-      - traefik.http.routers.homepage.middlewares=tinyauth
+      - traefik.http.services.gethomepage.loadbalancer.server.port=3000
+      - traefik.http.routers.gethomepage.rule=Host(`homepage.${DOMAIN}`)
+      - traefik.http.routers.gethomepage.entrypoints=websecure
+      - traefik.http.routers.gethomepage.tls.certResolver=default
+      - traefik.http.routers.gethomepage.tls.domains[0].main=${DOMAIN}
+      - traefik.http.routers.gethomepage.tls.domains[0].sans=*.${DOMAIN}
+      - traefik.http.routers.gethomepage.middlewares=tinyauth
 
   karakeep:
     container_name: karakeep

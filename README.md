@@ -2,72 +2,21 @@
 
 Docker Compose stacks for a self-hosted home server, managed through a Makefile.
 
-Edit the `.env` file with the proper values
+Copy `.env.example` to `.env` and fill in the proper values (see [.env file](#env-file))
 
 Run `make <target>` to create the desired containers or `make all` to deploy everything
 
 ## .env file
 
-Create an `.env` file in the repository root with the following values (the Makefile passes it with `--env-file .env`; `UID` is read-only in bash/zsh, so don't `source` this file):
+Copy [.env.example](.env.example) to `.env` in the repository root and fill in the values (comments in the file explain each one):
 
 ```shell
-# general configuration
-TIMEZONE=
-UID=
-GID=
-DOCKER_GID=
-
-# paths to config directory, transcode, media and download
-CONFIG=
-DOWNLOADS=
-MEDIA=
-TRANSCODE=
-
-# domain name for forwarding
-DOMAIN=
-HOST_IP=
-
-# beszel
-BESZEL_KEY=
-BESZEL_TOKEN=
-
-# influxdb
-INFLUXDB_ADMIN_PASSWORD=
-INFLUXDB_ADMIN_USERNAME=
-INFLUXDB_TOKEN=
-
-# karakeep
-KARAKEEP_SECRET=
-
-# plex
-PLEX_CLAIM=
-
-# speedtest
-SPEEDTEST_APIKEY=
-
-# vaultwarden
-VAULTWARDEN_ADMIN_TOKEN=
-
-# whatsupdocker (wud)
-WUD_ADMIN_USER=
-WUD_ADMIN_PASSWORD=
-
-# cloudflare
-CLOUDFLARE_TUNNEL_TOKEN=
-CLOUDFLARE_API_KEY=
-CLOUDFLARE_EMAIL=
-
-# tinyauth
-TINYAUTH_USERS=
-
-# loki
-LOKI_PASSWORD=
-
-# restic (backrest)
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
-RESTIC_PASSWORD=
+cp .env.example .env
 ```
+
+The Makefile passes it with `--env-file .env`. `UID` is read-only in bash/zsh, so don't `source` this file. Never commit `.env`; it is git-ignored.
+
+Homepage keeps its own secrets in `config/gethomepage/.env`, loaded by the `gethomepage` service. Create it from `config/gethomepage/.env.example`.
 
 Services marked ✓ in the host network column run with `network_mode: host`, so the host and container ports are the same (the application's own listening port). All other services use the default bridge network. `N/A` means no port is exposed.
 
@@ -78,7 +27,7 @@ Services marked ✓ in the host network column run with `network_mode: host`, so
 | service     | description              | host port | container port | host network |
 | ----------- | ------------------------ | --------- | -------------- | ------------ |
 | backrest    | backup manager           | 9898      | 9898           |              |
-| homepage    | application dashboard    | 3001      | 3000           |              |
+| gethomepage | application dashboard    | 3001      | 3000           |              |
 | karakeep    | bookmarks manager        | 3002      | 3000           |              |
 | pocketbase  | open source db in 1 file | 8093      | 8090           |              |
 | vaultwarden | password manager         | 8087      | 80             |              |
