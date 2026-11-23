@@ -41,3 +41,5 @@ layout:
     icon: mdi-database-sync-outline
   Tools:
     icon: mdi-tools
+  Personal:
+    icon: mdi-account-circle-outline

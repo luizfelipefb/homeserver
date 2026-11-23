@@ -319,3 +319,28 @@
         href: https://dozzle.luizfelipefb.com
         server: my-docker
         container: dozzle
+
+- Personal:
+    - EthFinder:
+        description: Ethereum Address Finder
+        icon: ethereum
+        server: my-docker
+        container: ethfinder
+    - Minhas Vantagens:
+        description: Itaú Minhas Vantagens Calculator
+        icon: mdi-ticket-percent-#000d3c
+        href: https://minhasvantagens.luizfelipefb.com
+        server: my-docker
+        container: minhasvantagens
+    - Finances:
+        description: Personal Finances
+        icon: mdi-wallet-outline-#6d5efc
+        href: https://finances.luizfelipefb.com
+        server: my-docker
+        container: finances
+    - Workouts:
+        description: Workout Tracker
+        icon: mdi-dumbbell-#f97316
+        href: https://workouts.luizfelipefb.com
+        server: my-docker
+        container: workouts
