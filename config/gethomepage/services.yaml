@@ -325,22 +325,28 @@
         description: Ethereum Address Finder
         icon: ethereum
         server: my-docker
-        container: ethfinder
+        container: personal-ethfinder
+    - Finances:
+        description: Personal Finances
+        icon: https://finances.luizfelipefb.com/favicon.svg
+        href: https://finances.luizfelipefb.com
+        server: my-docker
+        container: personal-finances
     - Minhas Vantagens:
         description: Itaú Minhas Vantagens Calculator
         icon: mdi-ticket-percent-#000d3c
         href: https://minhasvantagens.luizfelipefb.com
         server: my-docker
-        container: minhasvantagens
-    - Finances:
-        description: Personal Finances
-        icon: mdi-wallet-outline-#6d5efc
-        href: https://finances.luizfelipefb.com
+        container: personal-minhasvantagens
+    - Nutrition:
+        description: Nutrition Tracker
+        icon: https://nutrition.luizfelipefb.com/icon.svg
+        href: https://nutrition.luizfelipefb.com
         server: my-docker
-        container: finances
+        container: personal-nutrition
     - Workouts:
         description: Workout Tracker
         icon: mdi-dumbbell-#f97316
         href: https://workouts.luizfelipefb.com
         server: my-docker
-        container: workouts
+        container: personal-workouts
